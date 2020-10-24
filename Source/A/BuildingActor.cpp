@@ -22,18 +22,18 @@ void ABuildingActor::BeginPlay()
     Super::BeginPlay();
 }
 
-float NearestModNumber(float num,float mod)
+float NearestModNumber(float num, float mod)
 {
-    float minn = FMath::FloorToFloat(num/mod)*mod; 
+    float minn = FMath::FloorToFloat(num / mod) * mod;
     float maxn = minn + mod;
-    return num - minn < maxn -num?minn:maxn;
+    return num - minn < maxn - num ? minn : maxn;
 }
 
 FVector GridWorld(FVector pos, float mod)
 {
     const FVector output(pos.X,
-        NearestModNumber(pos.Y,mod),
-        NearestModNumber(pos.Z,mod));
+                         NearestModNumber(pos.Y, mod),
+                         NearestModNumber(pos.Z, mod));
     return output;
 }
 
@@ -41,28 +41,29 @@ FVector GridWorld(FVector pos, float mod)
 void ABuildingActor::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
-    const auto Controller = UGlobal::GetInstance()->character->Controller;
-    const auto PlayerController = Cast<APlayerController>(Controller);
-    // FVector WorldLocation,WorldDirection;
-    // PlayerController->DeprojectMousePositionToWorld(WorldLocation,WorldDirection);
-
-    FHitResult HitResult, Start, Dir, End;
-    PlayerController->DeprojectMousePositionToWorld(Start.Location, Dir.Location); //获取初始位置和方向
-
-    End.Location = Start.Location + (Dir.Location * 8000.0f); //设置追踪终点
-    GetWorld()->LineTraceSingleByChannel(HitResult, Start.Location, End.Location, ECC_Visibility);
-    // FVector pos = HitResult.Location;//位置
-    // // pos.X=std::max(1200.0f,pos.X);
-    // pos.X=1200;
-    //
-    // UE_LOG(LogTemp, Warning, TEXT("%s"),
-    //        *HitResult.Location.ToString());
-    FVector pos = FMath::LinePlaneIntersection(Start.Location, End.Location,
-                                               FVector(1200, 0, 0), FVector(100, 0, 0));
-
+    //取出当前玩家的PlayerController
+    const auto PlayerController = Cast<APlayerController> (UGlobal::GetInstance()->character->Controller);
+    FVector Start, Dir, End;
+    //根据鼠标位置 计算出朝向和视角起点的世界坐标
+    PlayerController->DeprojectMousePositionToWorld(Start, Dir); //获取初始位置和方向
     
-    pos=GridWorld(pos,100);
-    UE_LOG(LogTemp, Warning, TEXT("%s"),
-           *pos.ToString());
-    GetRootComponent()->SetWorldLocation(pos);
+    if (Start.X + Start.Y + Start.Z == 0)
+    {
+        //鼠标移出屏幕
+    }
+    else
+    {
+        //矢量求终点
+        End= Start+ (Dir * 8000.0f); //设置追踪终点
+        // GetWorld()->LineTraceSingleByChannel(HitResult, Start.Location, End.Location, ECC_Visibility);
+        //两点和平面相交 找交点
+        FVector pos = FMath::LinePlaneIntersection(Start, End,
+                                                   FVector(1200, 0, 0), FVector(100, 0, 0));
+        //按照100坐标对世界格子取整
+        pos = GridWorld(pos, 100);
+        UE_LOG(LogTemp, Warning, TEXT("%s"),
+               *pos.ToString());
+        //把物体移动过去
+        GetRootComponent()->SetWorldLocation(pos);
+    }
 }
