@@ -36,6 +36,7 @@ protected:
 
 
 public:
+	UInputComponent*PlayerInputComponent;
 	void BeginPlay();
 
 	AACharacter();

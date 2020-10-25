@@ -16,13 +16,15 @@ public:
 	ABuildingActor();
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* SuperMesh;
-
-
+	int BuildingId=0;
+	TArray<UClass*>BuildingList;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
+	void NextBuilding();
+	void PutBuilding();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

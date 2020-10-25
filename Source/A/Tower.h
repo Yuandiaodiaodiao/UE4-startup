@@ -6,6 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "Tower.generated.h"
 
+/**
+ * Tower的基类 能被建造 破坏 有ai 能进行攻击
+ *
+ */
 UCLASS()
 class A_API ATower : public AActor
 {
@@ -22,5 +26,10 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* SuperMesh;
+	
+	UPROPERTY(BlueprintReadWrite)
+	UParticleSystemComponent* shoot;
+	
 };
