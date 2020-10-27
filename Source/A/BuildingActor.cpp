@@ -1,7 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
-
-#include "Math/UnrealMathUtility.h"
 #include "BuildingActor.h"
+#include "Math/UnrealMathUtility.h"
 #include<algorithm>
 #include "Global.h"
 #include<string>
@@ -27,17 +26,12 @@ ABuildingActor::ABuildingActor()
 void ABuildingActor::BeginPlay()
 {
     Super::BeginPlay();
-    try
-    {
+
         UGlobal::GetInstance()->character->PlayerInputComponent
                               ->BindAction("NextBuilding", IE_Pressed, this, &ABuildingActor::NextBuilding);
         UGlobal::GetInstance()->character->PlayerInputComponent
                               ->BindAction("PutBuilding", IE_Pressed, this, &ABuildingActor::PutBuilding);
-    }
-    catch (...)
-    {
-        UE_LOG(LogTemp, Error, TEXT("BuildingActorBeginPlay"));
-    }
+
 }
 
 float NearestModNumber(float num, float mod)
