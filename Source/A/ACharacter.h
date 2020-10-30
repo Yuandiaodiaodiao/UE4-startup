@@ -38,7 +38,7 @@ protected:
 public:
 	UInputComponent*PlayerInputComponent;
 	void BeginPlay();
-
+	void PostInitializeComponents();
 	AACharacter();
 	UGameInstance* instance;
 	/** Returns SideViewCameraComponent subobject **/

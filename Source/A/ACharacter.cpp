@@ -47,6 +47,7 @@ AACharacter::AACharacter()
     UE_LOG(LogTemp, Log, TEXT("Character inited0"));
     // Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
     // are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -88,8 +89,7 @@ void AACharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const FVecto
 void AACharacter::BeginPlay()
 {
     Super::BeginPlay();
-    UGlobal::GetInstance()->character = this;
-    
+
     FVector Location = this->GetTransform().GetLocation();
     FRotator Rotation(0, 0, 0);
     FActorSpawnParameters SpawnInfo;
@@ -109,4 +109,12 @@ void AACharacter::BeginPlay()
         // PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
     }
     UE_LOG(LogTemp, Log, TEXT("Character begin3"));
+}
+
+void AACharacter::PostInitializeComponents()
+{
+    Super::PostInitializeComponents();
+    UE_LOG(LogTemp, Warning, TEXT("Character load in global"));
+    UGlobal::GetInstance()->character = this;
+
 }

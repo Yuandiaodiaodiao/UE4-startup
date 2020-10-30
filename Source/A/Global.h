@@ -3,32 +3,24 @@
 #pragma once
 
 #include "CoreMinimal.h"
-
-#include "ACharacter.h"
 #include "UObject/NoExportTypes.h"
+#include "ACharacter.h"
 #include "Global.generated.h"
 
 /**
  * 
  */
-UCLASS(Blueprintable,BlueprintType)
+UCLASS(BlueprintType,Blueprintable)
 class A_API UGlobal : public UObject
 {
     GENERATED_BODY()
-private:
-    
+
 public:
     UFUNCTION(BlueprintCallable)
     static UGlobal* GetInstance();
+    
+    UPROPERTY(BlueprintReadWrite)
     AACharacter* character;
-    
-    UFUNCTION(BlueprintCallable)
-    AACharacter* Character() const
-    {
-        return character;
-    }
-
-    
     
     UGlobal();
 
