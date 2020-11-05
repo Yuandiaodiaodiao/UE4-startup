@@ -5,8 +5,7 @@
 #include "CoreMinimal.h"
 
 
-#include "MyObject.h"
-#include "TowerController.h"
+
 #include "GameFramework/SaveGame.h"
 #include "Tower.h"
 #include "MySaveGame.generated.h"

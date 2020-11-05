@@ -11,7 +11,6 @@
 #include "VisualLogger/VisualLogger.h"
 #include "Global.h"
 #include "MySaveGame.h"
-#include "TestActor.h"
 #include "Kismet/GameplayStatics.h"
 
 AACharacter::AACharacter()
