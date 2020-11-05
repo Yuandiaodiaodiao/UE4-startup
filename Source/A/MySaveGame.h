@@ -33,34 +33,9 @@ public:
     UPROPERTY(SaveGame)
     int32 UserIndex;
 
-    UPROPERTY(SaveGame)
-    int32 intTest;
-
-    UPROPERTY(SaveGame)
-    UTowerController* utc;
-
-    UPROPERTY(SaveGame)
-    UClass* c;
-
-    UPROPERTY(SaveGame)
-    AActor* a;
-
-    UPROPERTY(SaveGame)
-    TArray<UTowerController*> t;
-
-    UPROPERTY(SaveGame)
-    FTowerDataCore StructTesT;
-
+    //全局的建筑物存档
     UPROPERTY(SaveGame)
     TMap<FVector,FTowerDataCore>TowerDataArray;
     
-    UPROPERTY(SaveGame)
-    UMyObject* StructTesC;
-    //
-    // UPROPERTY(SaveGame)
-    // TArray<FJsonObject> js;
-    //
-
-    UPROPERTY(SaveGame)
-    UObject* BPObject;
+ 
 };

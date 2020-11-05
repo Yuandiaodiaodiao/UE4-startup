@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "GameFramework/Actor.h"
 #include "Tower.generated.h"
 
@@ -19,7 +20,12 @@ struct FTowerDataCore
 	//保存对应tower的引用
 	UPROPERTY()
 	ATower* Tower;
+	//tower坐标 100取整
+	UPROPERTY()
+	FVector Location;
 
+	
+	ATower* GenerateTower(UWorld* world);
 	
 };
 /**
@@ -48,6 +54,6 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	UParticleSystemComponent* shoot;
 
-	UPROPERTY()
-	FTowerDataCore TowerData;
+	
+	FTowerDataCore *TowerData;
 };

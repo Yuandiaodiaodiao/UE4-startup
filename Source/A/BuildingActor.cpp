@@ -6,6 +6,8 @@
 #include<string>
 
 
+
+#include "Tower.h"
 #include "Engine/EngineTypes.h"
 using std::to_string;
 // Sets default values
@@ -26,6 +28,7 @@ ABuildingActor::ABuildingActor()
 void ABuildingActor::BeginPlay()
 {
     Super::BeginPlay();
+    NextBuilding();
 }
 
 void ABuildingActor::init(AACharacter* characteri)
@@ -59,23 +62,27 @@ void ABuildingActor::NextBuilding()
     BuildingId++;
     BuildingId %= BuildingList.Num();
     FVector Location = this->GetTransform().GetLocation();
-    FRotator Rotation(0, 0, 0);
-    FActorSpawnParameters SpawnInfo;
-    TArray<AActor*> ChildrenA;
-    this->GetAttachedActors(ChildrenA);
-    for (auto Child : ChildrenA)
+
+    if(ActorToShow)
     {
-        Child->Destroy();
+        ActorToShow->Destroy();
     }
-    AActor* NewActor = GetWorld()->SpawnActor<AActor>(BuildingList[BuildingId], Location, Rotation, SpawnInfo);
+    // TArray<AActor*> ChildrenA;
+    // this->GetAttachedActors(ChildrenA);
+    // for (auto Child : ChildrenA)
+    // {
+    //     Child->Destroy();
+    // }
+    AActor* NewActor = GetWorld()->SpawnActor<AActor>(BuildingList[BuildingId], Location, FRotator(), FActorSpawnParameters());
     //下一行取消注释会报错
     // NewActor->SetReplicates(true);
+    //附加到当前的建筑游标上
     NewActor->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
                                                             EAttachmentRule::KeepWorld,
                                                             EAttachmentRule::KeepWorld, false),
                             FName("building"));
 
-
+    ActorToShow=NewActor;
     UE_LOG(LogTemp, Warning, TEXT("QQ"));
 }
 
@@ -85,25 +92,23 @@ void ABuildingActor::NextBuilding()
  */
 void ABuildingActor::PutBuilding()
 {
-    FVector Location = this->GetTransform().GetLocation();
+    const FVector Location = this->GetTransform().GetLocation();
     if (UGlobal::GetInstance()->TowerArray.Contains(Location))
     {
-        //
         UE_LOG(LogTemp, Error, TEXT("cant build at same position"));
         return;
     }
-    FRotator Rotation(0, 0, 0);
-    FActorSpawnParameters SpawnInfo;
-    AActor* NewActor = GetWorld()->SpawnActor<AActor>(BuildingList[BuildingId], Location, Rotation, SpawnInfo);
-    NewActor->SetReplicates(true);
-    auto CRootComponent = Cast<UStaticMeshComponent>(NewActor->GetRootComponent());
-    CRootComponent->SetCollisionProfileName(FName("BlockAll"));
-    
-    auto TowerDataCore = NewObject<FTowerDataCore>();
+
+    //先创建tower的数据
+    const auto TowerDataCore = new FTowerDataCore();
+    //设置class 和position
     TowerDataCore->TowerClass = BuildingList[BuildingId];
-    TowerDataCore->Tower = Cast<ATower>(NewActor);
-    Cast<ATower>(NewActor)->TowerData=*TowerDataCore;
-    UGlobal::GetInstance()->TowerArray.Add(Location, NewActor);
+    TowerDataCore->Location=Location;
+    //传入world 创建actor
+    const auto Tower=TowerDataCore->GenerateTower(GetWorld());
+    
+
+    UGlobal::GetInstance()->TowerArray.Add(Location, Tower);
 }
 
 // Called every frame
@@ -113,8 +118,7 @@ void ABuildingActor::Tick(float DeltaTime)
     //取出当前玩家的PlayerController
     if (character == nullptr)
     {
-        // UE_LOG(LogTemp, Warning, TEXT("building Actor character no found"));
-
+        UE_LOG(LogTemp, Error, TEXT("building Actor character no found"));
         return;
     }
     const auto PlayerController = Cast<APlayerController>(character->Controller);

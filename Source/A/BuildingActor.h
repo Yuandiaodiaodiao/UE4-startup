@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 
+
 #include "ACharacter.h"
 #include "GameFramework/Actor.h"
 #include "BuildingActor.generated.h"
@@ -12,7 +13,7 @@ UCLASS()
 class A_API ABuildingActor : public AActor
 {
 	GENERATED_BODY()
-	
+	AActor* ActorToShow;
 public:	
 	// Sets default values for this actor's properties
 	AACharacter* character;

@@ -77,11 +77,8 @@ void AACharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 void AACharacter::genBuildingActor()
 {
     FVector Location = this->GetTransform().GetLocation();
-    FRotator Rotation(0, 0, 0);
-    FActorSpawnParameters SpawnInfo;
 
-    AActor* NewActor = GetWorld()->SpawnActor<AActor>(ABuildingActor::StaticClass(), Location, Rotation, SpawnInfo);
-
+    AActor* NewActor = GetWorld()->SpawnActor<AActor>(ABuildingActor::StaticClass(), Location, FRotator(), FActorSpawnParameters());
     NewActor->SetReplicates(true);
 
     if (PlayerInputComponent)
@@ -98,19 +95,54 @@ void AACharacter::LoadGame()
 {
     UE_LOG(LogTemp, Warning, TEXT("in LoadGame"));
     UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("AT"), 0));
-    auto cc = SaveGameInstance->utc;
-    if (cc)
+   
+    TMap<FVector,ATower*>TowerArray;
+    for (auto actor : UGlobal::GetInstance()->TowerArray)
     {
-        UE_LOG(LogTemp, Warning, TEXT("find utower controller"));
+        auto tower = Cast<ATower>(actor.Value);
+        if (auto towerfind = SaveGameInstance->TowerDataArray.Find(actor.Key))
+        {
+            //从读档的数据里load出当前位置的tower
+            if (towerfind->Tower == tower)
+            {
+                //tower指针一样 说明旧的tower还没有被销毁 只替换tower数据
+                tower->TowerData = towerfind;
+                TowerArray.Add(actor.Key,actor.Value);
+            }
+            else
+            {
+                tower->Destroy();
+
+                //创建新的tower 销毁旧的
+                tower=towerfind->GenerateTower(GetWorld());
+                TowerArray.Add(actor.Key,tower);
+            }
+        }
+        else
+        {
+            //存档里没有 销毁炮塔
+            tower->Destroy();
+            
+        }
     }
-    auto t = SaveGameInstance->t;
-    if (t.Num() > 0)
+    for(auto towerData:SaveGameInstance->TowerDataArray)
     {
-        UE_LOG(LogTemp, Warning, TEXT("TArray can use"));
+        if(TowerArray.Find(towerData.Key))
+        {
+            //这部分 已经处理过了
+        }else
+        {
+            //新增炮塔
+            auto tower=towerData.Value.GenerateTower(GetWorld());
+            TowerArray.Add(towerData.Key,tower);
+        }
+            
     }
-    auto c = SaveGameInstance->c;
+    //挂上新的TowerArray    
+    UGlobal::GetInstance()->TowerArray=TowerArray;
+
     UE_LOG(LogTemp, Warning, TEXT("%s"), *(SaveGameInstance->UserName));
-    AActor* NewActor = GetWorld()->SpawnActor<AActor>(c, FVector(), FRotator(), FActorSpawnParameters());
+
     UE_LOG(LogTemp, Warning, TEXT("LoadGame finish"));
 }
 
@@ -123,29 +155,22 @@ void AACharacter::SaveGame()
     {
         // 设置savegame对象上的数据。
         // SaveGameInstance->PlayerName = TEXT("PlayerOne");
-        
-        
-        auto controller = (UTowerController*)NewObject<UTowerController>();
-        auto actor = (AActor*)NewObject<ATestActor>();
-        SaveGameInstance->UserName = TEXT("ffff");
-        SaveGameInstance->utc = controller;
-        SaveGameInstance->a = actor;
-        SaveGameInstance->intTest = 1;
-        SaveGameInstance->c = cccc;
-        SaveGameInstance->t.Add(controller);
-        auto tc=NewObject<UMyObject>();
-        tc->test=1;
-        SaveGameInstance->StructTesC=tc;
 
-        auto bpcc=NewObject<UObject>(bpo);
-        SaveGameInstance->BPObject=bpcc;
+        //保存所有的TowerData
+        for (auto actor : UGlobal::GetInstance()->TowerArray)
+        {
+            auto atower = Cast<ATower>(actor.Value);
+            SaveGameInstance->TowerDataArray.Add(actor.Key, *atower->TowerData);
+        }
 
-        const FString InputString = TEXT("{\"grades\":\"test\"}");
-        TSharedRef< TJsonReader<> > Reader = TJsonReaderFactory<>::Create( InputString );
-        TSharedPtr<FJsonObject> rRoot;
-        FJsonSerializer::Deserialize( Reader, rRoot );
 
-        
+        //json反序列化
+        // const FString InputString = TEXT("{\"grades\":\"test\"}");
+        // TSharedRef< TJsonReader<> > Reader = TJsonReaderFactory<>::Create( InputString );
+        // TSharedPtr<FJsonObject> rRoot;
+        // FJsonSerializer::Deserialize( Reader, rRoot );
+
+
         if (UGameplayStatics::SaveGameToSlot(SaveGameInstance, TEXT("AT"),
                                              SaveGameInstance->UserIndex))
         {

@@ -7,6 +7,8 @@
 #include "ACharacter.h"
 #include "Tower.h"
 
+
+
 #include "Global.generated.h"
 
 /**
@@ -27,6 +29,6 @@ public:
     
     UGlobal();
 
-    TMap<FVector,AActor*>TowerArray;
+    TMap<FVector,ATower*>TowerArray;
     
 };
