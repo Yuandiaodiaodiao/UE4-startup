@@ -70,7 +70,6 @@ void AACharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 
     PlayerInputComponent->BindTouch(IE_Pressed, this, &AACharacter::TouchStarted);
     PlayerInputComponent->BindTouch(IE_Released, this, &AACharacter::TouchStopped);
-    genBuildingActor();
 }
 
 void AACharacter::genBuildingActor()
@@ -78,7 +77,7 @@ void AACharacter::genBuildingActor()
     FVector Location = this->GetTransform().GetLocation();
 
     AActor* NewActor = GetWorld()->SpawnActor<AActor>(ABuildingActor::StaticClass(), Location, FRotator(), FActorSpawnParameters());
-    NewActor->SetReplicates(true);
+    // NewActor->SetReplicates(true);
 
     if (PlayerInputComponent)
     {
@@ -206,6 +205,8 @@ void AACharacter::BeginPlay()
 
     UGlobal::GetInstance()->TowerArray.Reset();
     UE_LOG(LogTemp, Warning, TEXT("Clean TowerArray"));
+    genBuildingActor();
+
 }
 
 void AACharacter::PostInitializeComponents()
