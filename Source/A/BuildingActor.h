@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "ACharacter.h"
 #include "GameFramework/Actor.h"
 #include "BuildingActor.generated.h"
 
@@ -13,17 +15,22 @@ class A_API ABuildingActor : public AActor
 	
 public:	
 	// Sets default values for this actor's properties
+	AACharacter* character;
+	
 	ABuildingActor();
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* SuperMesh;
 	int BuildingId=0;
 	TArray<UClass*>BuildingList;
+	void init(AACharacter* characteri);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
 	void NextBuilding();
+	
 	void PutBuilding();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

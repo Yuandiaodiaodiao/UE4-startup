@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "ACharacter.h"
+#include "Tower.h"
+
 #include "Global.generated.h"
 
 /**
@@ -21,8 +23,10 @@ public:
     
     UPROPERTY(BlueprintReadWrite)
     AACharacter* character;
+
     
     UGlobal();
 
+    TMap<FVector,AActor*>TowerArray;
     
 };

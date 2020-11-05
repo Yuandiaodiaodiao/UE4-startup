@@ -16,3 +16,6 @@
   - 武器瞄准偏移
   - 滑墙跑动画
 - 测试4.25编译源码执行chaos系统是否还有bug
+
+## towerController设计
+controller 负责保存

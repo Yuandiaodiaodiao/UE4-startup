@@ -13,6 +13,7 @@ UGlobal* UGlobal::GetInstance()
 
 UGlobal::UGlobal()
 {
+    TowerArray.Reset();
    instance=this;
 }
 

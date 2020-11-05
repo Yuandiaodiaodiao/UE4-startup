@@ -6,6 +6,22 @@
 #include "GameFramework/Actor.h"
 #include "Tower.generated.h"
 
+class A_API ATower;
+
+USTRUCT()
+struct FTowerDataCore
+{
+	GENERATED_BODY()
+
+	//tower的class 用于 spawnActor
+	UPROPERTY()
+	UClass* TowerClass;
+	//保存对应tower的引用
+	UPROPERTY()
+	ATower* Tower;
+
+	
+};
 /**
  * Tower的基类 能被建造 破坏 有ai 能进行攻击
  *
@@ -31,5 +47,7 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite)
 	UParticleSystemComponent* shoot;
-	
+
+	UPROPERTY()
+	FTowerDataCore TowerData;
 };

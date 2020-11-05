@@ -10,6 +10,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "VisualLogger/VisualLogger.h"
 #include "Global.h"
+#include "MySaveGame.h"
+#include "TestActor.h"
+#include "Kismet/GameplayStatics.h"
 
 AACharacter::AACharacter()
 {
@@ -47,7 +50,8 @@ AACharacter::AACharacter()
     UE_LOG(LogTemp, Log, TEXT("Character inited0"));
     // Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
     // are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
-
+    cccc = ConstructorHelpers::FClassFinder<AActor>(TEXT("/Game/Blueprints/BTower")).Class;
+    bpo = ConstructorHelpers::FClassFinder<UObject>(TEXT("/Game/Blueprints/BPSave")).Class;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -55,14 +59,100 @@ AACharacter::AACharacter()
 
 void AACharacter::SetupPlayerInputComponent(class UInputComponent* InputComponentA)
 {
+    UE_LOG(LogTemp, Warning, TEXT("SetupPlayerInputComponent"));
+
     PlayerInputComponent = InputComponentA;
     // set up gameplay key bindings
     PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
     PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
     PlayerInputComponent->BindAxis("MoveRight", this, &AACharacter::MoveRight);
+    PlayerInputComponent->BindAction("SaveGame", IE_Pressed, this, &AACharacter::SaveGame);
+    PlayerInputComponent->BindAction("LoadGame", IE_Pressed, this, &AACharacter::LoadGame);
 
     PlayerInputComponent->BindTouch(IE_Pressed, this, &AACharacter::TouchStarted);
     PlayerInputComponent->BindTouch(IE_Released, this, &AACharacter::TouchStopped);
+    genBuildingActor();
+}
+
+void AACharacter::genBuildingActor()
+{
+    FVector Location = this->GetTransform().GetLocation();
+    FRotator Rotation(0, 0, 0);
+    FActorSpawnParameters SpawnInfo;
+
+    AActor* NewActor = GetWorld()->SpawnActor<AActor>(ABuildingActor::StaticClass(), Location, Rotation, SpawnInfo);
+
+    NewActor->SetReplicates(true);
+
+    if (PlayerInputComponent)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Character begin4"));
+        auto BuildingActor = Cast<ABuildingActor>(NewActor);
+        BuildingActor->init(this);
+        // PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+    }
+    UE_LOG(LogTemp, Log, TEXT("Character begin3"));
+}
+
+void AACharacter::LoadGame()
+{
+    UE_LOG(LogTemp, Warning, TEXT("in LoadGame"));
+    UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("AT"), 0));
+    auto cc = SaveGameInstance->utc;
+    if (cc)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("find utower controller"));
+    }
+    auto t = SaveGameInstance->t;
+    if (t.Num() > 0)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("TArray can use"));
+    }
+    auto c = SaveGameInstance->c;
+    UE_LOG(LogTemp, Warning, TEXT("%s"), *(SaveGameInstance->UserName));
+    AActor* NewActor = GetWorld()->SpawnActor<AActor>(c, FVector(), FRotator(), FActorSpawnParameters());
+    UE_LOG(LogTemp, Warning, TEXT("LoadGame finish"));
+}
+
+void AACharacter::SaveGame()
+{
+    UE_LOG(LogTemp, Warning, TEXT("in SaveGame2"));
+
+    if (UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(
+        UGameplayStatics::CreateSaveGameObject(UMySaveGame::StaticClass())))
+    {
+        // 设置savegame对象上的数据。
+        // SaveGameInstance->PlayerName = TEXT("PlayerOne");
+        
+        
+        auto controller = (UTowerController*)NewObject<UTowerController>();
+        auto actor = (AActor*)NewObject<ATestActor>();
+        SaveGameInstance->UserName = TEXT("ffff");
+        SaveGameInstance->utc = controller;
+        SaveGameInstance->a = actor;
+        SaveGameInstance->intTest = 1;
+        SaveGameInstance->c = cccc;
+        SaveGameInstance->t.Add(controller);
+        auto tc=NewObject<UMyObject>();
+        tc->test=1;
+        SaveGameInstance->StructTesC=tc;
+
+        auto bpcc=NewObject<UObject>(bpo);
+        SaveGameInstance->BPObject=bpcc;
+
+        const FString InputString = TEXT("{\"grades\":\"test\"}");
+        TSharedRef< TJsonReader<> > Reader = TJsonReaderFactory<>::Create( InputString );
+        TSharedPtr<FJsonObject> rRoot;
+        FJsonSerializer::Deserialize( Reader, rRoot );
+
+        
+        if (UGameplayStatics::SaveGameToSlot(SaveGameInstance, TEXT("AT"),
+                                             SaveGameInstance->UserIndex))
+        {
+            // 成功保存。
+            UE_LOG(LogTemp, Warning, TEXT("SaveSuccess"));
+        }
+    }
 }
 
 void AACharacter::MoveRight(float Value)
@@ -90,31 +180,13 @@ void AACharacter::BeginPlay()
 {
     Super::BeginPlay();
 
-    FVector Location = this->GetTransform().GetLocation();
-    FRotator Rotation(0, 0, 0);
-    FActorSpawnParameters SpawnInfo;
-    for (auto Child : this->Children)
-    {    
-        Child->Destroy();
-    }
-    AActor* NewActor = GetWorld()->SpawnActor<AActor>(ABuildingActor::StaticClass(), Location, Rotation, SpawnInfo);
-    // NewActor->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::KeepRelative,
-    //                                                         EAttachmentRule::KeepWorld,
-    //                                                         EAttachmentRule::KeepWorld, true),
-    //                         FName("BuildingActor"));
-    if(PlayerInputComponent)
-    {
-        UE_LOG(LogTemp, Log, TEXT("Character begin4"));
-    
-        // PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-    }
-    UE_LOG(LogTemp, Log, TEXT("Character begin3"));
+    UGlobal::GetInstance()->TowerArray.Reset();
+    UE_LOG(LogTemp, Warning, TEXT("Clean TowerArray"));
 }
 
 void AACharacter::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
-    UE_LOG(LogTemp, Warning, TEXT("Character load in global"));
+    UE_LOG(LogTemp, Warning, TEXT("Character load in global a"));
     UGlobal::GetInstance()->character = this;
-
 }
