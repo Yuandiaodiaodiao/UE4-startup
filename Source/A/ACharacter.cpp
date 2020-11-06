@@ -76,7 +76,7 @@ void AACharacter::genBuildingActor()
 {
     FVector Location = this->GetTransform().GetLocation();
 
-    AActor* NewActor = GetWorld()->SpawnActor<AActor>(ABuildingActor::StaticClass(), Location, FRotator(), FActorSpawnParameters());
+    AActor* NewActor = GetWorld()->SpawnActor<AActor>(ABuildingActor::StaticClass(), Location, FRotator(0), FActorSpawnParameters());
     // NewActor->SetReplicates(true);
 
     if (PlayerInputComponent)
