@@ -6,7 +6,7 @@
 
 ATower* FTowerDataCore::GenerateTower(UWorld* world)
 {
-    AActor* NewActor = world->SpawnActor<AActor>(TowerClass, Location, FRotator(), FActorSpawnParameters());
+    AActor* NewActor = world->SpawnActor<AActor>(TowerClass, Location, FRotator(0), FActorSpawnParameters());
     NewActor->SetReplicates(true);
     auto CRootComponent = Cast<UStaticMeshComponent>(NewActor->GetRootComponent());
     CRootComponent->SetCollisionProfileName(FName("BlockAll"));

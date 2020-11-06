@@ -73,7 +73,7 @@ void ABuildingActor::NextBuilding()
     // {
     //     Child->Destroy();
     // }
-    AActor* NewActor = GetWorld()->SpawnActor<AActor>(BuildingList[BuildingId], Location, FRotator(), FActorSpawnParameters());
+    AActor* NewActor = GetWorld()->SpawnActor<AActor>(BuildingList[BuildingId], Location, FRotator(0), FActorSpawnParameters());
     //下一行取消注释会报错
     // NewActor->SetReplicates(true);
     //附加到当前的建筑游标上
