@@ -36,6 +36,11 @@ void ABuildingActor::init(AACharacter* characteri)
     UE_LOG(LogTemp, Warning, TEXT("building Actor init "));
 
     character = characteri;
+    if(!character)
+    {
+        UE_LOG(LogTemp, Error, TEXT("building Actor init failed "));
+
+    }
     character->PlayerInputComponent
              ->BindAction("NextBuilding", IE_Pressed, this, &ABuildingActor::NextBuilding);
     character->PlayerInputComponent
@@ -125,14 +130,11 @@ void ABuildingActor::Tick(float DeltaTime)
     const auto CharacterTransform = character->GetTransform();
     FVector Start, Dir, End;
     //根据鼠标位置 计算出朝向和视角起点的世界坐标
-    PlayerController->DeprojectMousePositionToWorld(Start, Dir); //获取初始位置和方向
-
-    if (Start.X + Start.Y + Start.Z == 0)
-    {
-        //鼠标移出屏幕
-    }
-    else
-    {
+    auto bDirectionGet=PlayerController->DeprojectMousePositionToWorld(Start, Dir); //获取初始位置和方向
+    // UE_LOG(LogTemp, Warning, TEXT("%d"),
+    //            bDirectionGet);
+    //鼠标在屏幕内
+    if(bDirectionGet){
         //矢量求终点
         End = Start + (Dir * 8000.0f); //设置追踪终点
         // GetWorld()->LineTraceSingleByChannel(HitResult, Start.Location, End.Location, ECC_Visibility);
