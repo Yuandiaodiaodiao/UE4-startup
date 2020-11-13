@@ -49,8 +49,6 @@ AACharacter::AACharacter()
     UE_LOG(LogTemp, Log, TEXT("Character inited0"));
     // Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
     // are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
-    cccc = ConstructorHelpers::FClassFinder<AActor>(TEXT("/Game/Blueprints/BTower")).Class;
-    bpo = ConstructorHelpers::FClassFinder<UObject>(TEXT("/Game/Blueprints/BPSave")).Class;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -67,11 +65,15 @@ void AACharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
     PlayerInputComponent->BindAxis("MoveRight", this, &AACharacter::MoveRight);
     PlayerInputComponent->BindAction("SaveGame", IE_Pressed, this, &AACharacter::SaveGame);
     PlayerInputComponent->BindAction("LoadGame", IE_Pressed, this, &AACharacter::LoadGame);
+    PlayerInputComponent->BindAction("TowerEquip", IE_Pressed, this, &AACharacter::TowerEquip);
 
     PlayerInputComponent->BindTouch(IE_Pressed, this, &AACharacter::TouchStarted);
     PlayerInputComponent->BindTouch(IE_Released, this, &AACharacter::TouchStopped);
 }
-
+void AACharacter::TowerEquip()
+{
+    
+}
 void AACharacter::genBuildingActor()
 {
     FVector Location = this->GetTransform().GetLocation();

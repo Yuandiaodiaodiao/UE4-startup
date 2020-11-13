@@ -28,11 +28,12 @@ public:
     // Sets default values for this actor's properties
     AGunBase();
 
-    UPROPERTY(BlueprintReadWrite)
+    //用来决定枪支类型 蓝图可见
+    UPROPERTY(BlueprintReadWrite,EditAnywhere)
     EGunType GunType;
 
-
-    UFUNCTION(BlueprintNativeEvent,BlueprintCallable, Category = "Snowing|BlueprintFunc")
+    //射击的顶层实现
+    UFUNCTION(BlueprintNativeEvent,BlueprintCallable, Category = "BlueprintFunc")
     void shoot(FVector StartLocation,FVector EndLocation);
 
 

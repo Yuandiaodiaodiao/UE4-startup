@@ -9,19 +9,18 @@
 
 class A_API ATower;
 
-USTRUCT()
-struct FTowerDataCore
+USTRUCT(BlueprintType)
+struct  FTowerDataCore
 {
 	GENERATED_BODY()
-
 	//tower的class 用于 spawnActor
-	UPROPERTY()
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	UClass* TowerClass;
 	//保存对应tower的引用
-	UPROPERTY()
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	ATower* Tower;
 	//tower坐标 100取整
-	UPROPERTY()
+	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	FVector Location;
 
 	
@@ -32,7 +31,7 @@ struct FTowerDataCore
  * Tower的基类 能被建造 破坏 有ai 能进行攻击
  *
  */
-UCLASS()
+UCLASS(BlueprintType)
 class A_API ATower : public AActor
 {
 	GENERATED_BODY()
@@ -54,6 +53,15 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 	UParticleSystemComponent* shoot;
 
-	
 	FTowerDataCore *TowerData;
+
+	UFUNCTION(BlueprintCallable)
+	FTowerDataCore& GetTowerData()
+	{
+		return *TowerData;
+	}
+	
+	
+
+
 };
