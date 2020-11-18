@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "GunBase.h"
 #include "GameFramework/Character.h"
 #include "ACharacter.generated.h"
 
@@ -32,7 +34,6 @@ protected:
 
     // APawn interface
     virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
-    void TowerEquip();
     void genBuildingActor();
     void LoadGame();
     void SaveGame();
@@ -49,5 +50,14 @@ public:
     FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
     /** Returns CameraBoom subobject **/
     FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-    
+
+    //获取AACharacter子类拿的枪
+    UFUNCTION(BlueprintNativeEvent,BlueprintCallable, Category = "BlueprintFunc")
+    AGunBase* GetEquippedGun();
+
+    //将手上的装备 转移给tower
+    void TowerEquip();
+
+    //获取玩家鼠标选中的物体
+    AActor* GetMouseSelected(ECollisionChannel TraceChannel);
 };

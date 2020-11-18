@@ -2,6 +2,8 @@
 
 #include "ACharacter.h"
 
+
+#include "A.h"
 #include "BuildingActor.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -51,6 +53,11 @@ AACharacter::AACharacter()
     // are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
 }
 
+AGunBase* AACharacter::GetEquippedGun_Implementation()
+{
+    return nullptr;
+}
+
 //////////////////////////////////////////////////////////////////////////
 // Input
 
@@ -72,8 +79,44 @@ void AACharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 }
 void AACharacter::TowerEquip()
 {
+    //拿到手上装备着的gun
+    auto gun=GetEquippedGun();
+    auto logchar=gun==nullptr? TEXT("get gun falied"):TEXT("get gun success");
+    UE_LOG(LogTemp, Warning, TEXT("%s"),logchar);
+    if(gun==nullptr)
+    {//如果没有枪 退出
+        return;
+    }
+    //射线检测鼠标指向的tower
+    auto tower=GetMouseSelected(ECC_Tower);
+    if(tower==nullptr)
+    {
+        return;
+    }
+    UE_LOG(LogTemp, Warning, TEXT("selected tower"));
+
     
 }
+
+AActor* AACharacter::GetMouseSelected(ECollisionChannel TraceChannel)
+{
+    
+    const auto PlayerController = Cast<APlayerController>(this->Controller);
+    FVector Start, Dir, End;
+    //根据鼠标位置 计算出朝向和视角起点的世界坐标
+    auto bDirectionGet=PlayerController->DeprojectMousePositionToWorld(Start, Dir); //获取初始位置和方向
+
+    //鼠标在屏幕内
+    if(bDirectionGet){
+        //矢量求终点
+        End = Start + (Dir * 8000.0f); //设置追踪终点
+        FHitResult HitResult;
+        GetWorld()->LineTraceSingleByChannel(HitResult, Start, End, TraceChannel);
+        return HitResult.GetActor();
+    }
+    return nullptr;
+}
+
 void AACharacter::genBuildingActor()
 {
     FVector Location = this->GetTransform().GetLocation();

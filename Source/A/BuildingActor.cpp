@@ -1,15 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 #include "BuildingActor.h"
+
+
 #include "Math/UnrealMathUtility.h"
-#include<algorithm>
 #include "Global.h"
-#include<string>
 
 
 
 #include "Tower.h"
 #include "Engine/EngineTypes.h"
-using std::to_string;
 // Sets default values
 ABuildingActor::ABuildingActor()
 {
@@ -88,6 +87,12 @@ void ABuildingActor::NextBuilding()
                             FName("building"));
 
     ActorToShow=NewActor;
+    // Cast<ATower>(ActorToShow)->SuperMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    auto rootC=Cast<UStaticMeshComponent>(ActorToShow->GetRootComponent());
+    auto collisionProfile=rootC->GetCollisionProfileName();
+    Cast<UStaticMeshComponent>(ActorToShow->GetRootComponent())->SetCollisionProfileName(FName("NoCollision"));
+    // ActorToShow->SetActorEnableCollision(false);
+    auto newName=rootC->GetCollisionProfileName();
     UE_LOG(LogTemp, Warning, TEXT("QQ"));
 }
 
