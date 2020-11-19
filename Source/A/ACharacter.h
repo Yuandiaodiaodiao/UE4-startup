@@ -52,9 +52,13 @@ public:
     FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 
     //获取AACharacter子类拿的枪
-    UFUNCTION(BlueprintNativeEvent,BlueprintCallable, Category = "BlueprintFunc")
+    UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
     AGunBase* GetEquippedGun();
 
+    //获取AACharacter子类拿的枪
+    UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
+    void SetEquippedGun(AGunBase* Gun);
+    
     //将手上的装备 转移给tower
     void TowerEquip();
 

@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 
+
+#include "GunBase.h"
 #include "GameFramework/Actor.h"
 #include "Tower.generated.h"
 
@@ -62,7 +64,7 @@ public:
 		return *TowerData;
 	}
 	
-	
+	void EquipWeapon(AGunBase* Gun);
 
 
 };

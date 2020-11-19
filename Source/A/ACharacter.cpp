@@ -77,6 +77,11 @@ void AACharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
     PlayerInputComponent->BindTouch(IE_Pressed, this, &AACharacter::TouchStarted);
     PlayerInputComponent->BindTouch(IE_Released, this, &AACharacter::TouchStopped);
 }
+
+void AACharacter::SetEquippedGun_Implementation(AGunBase* Gun)
+{
+}
+
 void AACharacter::TowerEquip()
 {
     //拿到手上装备着的gun
@@ -88,13 +93,17 @@ void AACharacter::TowerEquip()
         return;
     }
     //射线检测鼠标指向的tower
-    auto tower=GetMouseSelected(ECC_Tower);
+    auto tower=(ATower*)GetMouseSelected(ECC_Tower);
     if(tower==nullptr)
     {
         return;
     }
     UE_LOG(LogTemp, Warning, TEXT("selected tower"));
 
+    //装备武器
+    SetEquippedGun(nullptr);
+    tower->EquipWeapon(gun);
+    
     
 }
 

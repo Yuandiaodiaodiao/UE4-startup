@@ -29,7 +29,7 @@ ATower::ATower()
     // SuperMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     // this->SetActorEnableCollision(false);
     static auto mesh = ConstructorHelpers::FObjectFinderOptional<UStaticMesh>(
-        TEXT("StaticMesh'/Game/Geometry/Meshes/1M_Cube.1M_Cube'")).Get();
+        TEXT("StaticMesh'/Game/Geometry/Meshes/Tower_Cube_Yuan.Tower_Cube_Yuan'")).Get();
     //设置模型
     
     SuperMesh->SetStaticMesh(mesh);
@@ -52,4 +52,12 @@ void ATower::Tick(float DeltaTime)
 {
     Super::Tick(DeltaTime);
     //射个激光
+}
+
+void ATower::EquipWeapon(AGunBase* Gun)
+{
+    Gun->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
+                                                               EAttachmentRule::SnapToTarget,
+                                                               EAttachmentRule::KeepWorld, false),
+                               FName("Weapon"));
 }

@@ -81,6 +81,7 @@ void ABuildingActor::NextBuilding()
     //下一行取消注释会报错
     // NewActor->SetReplicates(true);
     //附加到当前的建筑游标上
+    
     NewActor->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
                                                             EAttachmentRule::KeepWorld,
                                                             EAttachmentRule::KeepWorld, false),
