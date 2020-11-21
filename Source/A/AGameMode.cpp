@@ -2,6 +2,7 @@
 
 #include "AGameMode.h"
 #include "ACharacter.h"
+#include "MyPlayerState.h"
 #include "UObject/ConstructorHelpers.h"
 
 AAGameMode::AAGameMode()
@@ -12,4 +13,5 @@ AAGameMode::AAGameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+	PlayerStateClass=AMyPlayerState::StaticClass();
 }

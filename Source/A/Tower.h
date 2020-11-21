@@ -6,13 +6,15 @@
 
 
 #include "GunBase.h"
+#include "ItemInterface.h"
+#include "Engine/DataTable.h"
 #include "GameFramework/Actor.h"
 #include "Tower.generated.h"
 
 class A_API ATower;
 
 USTRUCT(BlueprintType)
-struct  FTowerDataCore
+struct  FTowerDataCore : public FItemTable 
 {
 	GENERATED_BODY()
 	//tower的class 用于 spawnActor
@@ -25,6 +27,8 @@ struct  FTowerDataCore
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
 	FVector Location;
 
+	virtual FString GenItemInfo();
+
 	
 	ATower* GenerateTower(UWorld* world);
 	
@@ -34,7 +38,7 @@ struct  FTowerDataCore
  *
  */
 UCLASS(BlueprintType)
-class A_API ATower : public AActor
+class A_API ATower : public AActor,public IItemInterface
 {
 	GENERATED_BODY()
 	
@@ -66,5 +70,5 @@ public:
 	
 	void EquipWeapon(AGunBase* Gun);
 
-
+	virtual FItemTable* GetData() override;
 };

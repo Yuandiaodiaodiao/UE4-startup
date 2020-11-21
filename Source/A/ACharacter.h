@@ -20,6 +20,7 @@ class AACharacter : public ACharacter
     /** Camera boom positioning the camera beside the character */
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
     class USpringArmComponent* CameraBoom;
+    TSubclassOf<UUserWidget> InventoryClass;
 
 protected:
 
@@ -45,6 +46,7 @@ public:
     void BeginPlay();
     void PostInitializeComponents();
     AACharacter();
+    void ShowInventory();
     UGameInstance* instance;
     /** Returns SideViewCameraComponent subobject **/
     FORCEINLINE class UCameraComponent* GetSideViewCameraComponent() const { return SideViewCameraComponent; }
@@ -58,7 +60,8 @@ public:
     //获取AACharacter子类拿的枪
     UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
     void SetEquippedGun(AGunBase* Gun);
-    
+
+    void PickUpTower();
     //将手上的装备 转移给tower
     void TowerEquip();
 

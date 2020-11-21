@@ -12,8 +12,12 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "VisualLogger/VisualLogger.h"
 #include "Global.h"
+#include "MyPlayerState.h"
 #include "MySaveGame.h"
+#include "MyUserWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "Blueprint/UserWidget.h"
+
 
 AACharacter::AACharacter()
 {
@@ -51,8 +55,18 @@ AACharacter::AACharacter()
     UE_LOG(LogTemp, Log, TEXT("Character inited0"));
     // Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
     // are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
+    InventoryClass=ConstructorHelpers::FClassFinder<UUserWidget>(TEXT("/Game/UI/TowerWidget_Yuan")).Class;
 }
+void AACharacter::ShowInventory()
+{
+    auto State=(AMyPlayerState*)this->GetPlayerState();
 
+    auto InventoryWidget=(UMyUserWidget*)CreateWidget(Cast<APlayerController>(this->GetController()),InventoryClass);
+    InventoryWidget->InjectInventoryData(State->Inventory);
+    InventoryWidget->AddToViewport();
+    // auto data=State->Inventory.Top();
+    
+}
 AGunBase* AACharacter::GetEquippedGun_Implementation()
 {
     return nullptr;
@@ -73,6 +87,8 @@ void AACharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
     PlayerInputComponent->BindAction("SaveGame", IE_Pressed, this, &AACharacter::SaveGame);
     PlayerInputComponent->BindAction("LoadGame", IE_Pressed, this, &AACharacter::LoadGame);
     PlayerInputComponent->BindAction("TowerEquip", IE_Pressed, this, &AACharacter::TowerEquip);
+    PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AACharacter::ShowInventory);
+    PlayerInputComponent->BindAction("PickUpTower", IE_Pressed, this, &AACharacter::PickUpTower);
 
     PlayerInputComponent->BindTouch(IE_Pressed, this, &AACharacter::TouchStarted);
     PlayerInputComponent->BindTouch(IE_Released, this, &AACharacter::TouchStopped);
@@ -80,8 +96,20 @@ void AACharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 
 void AACharacter::SetEquippedGun_Implementation(AGunBase* Gun)
 {
+    
 }
-
+void AACharacter::PickUpTower()
+{
+    auto tower=(ATower*)GetMouseSelected(ECC_Tower);
+    if(tower==nullptr) return;
+    auto key=UGlobal::GetInstance()->TowerArray.FindKey(tower);
+    UGlobal::GetInstance()->TowerArray.Remove(*key);
+    //加入
+    auto State=(AMyPlayerState*)this->GetPlayerState();
+    State->Inventory.Add(tower->GetData());
+    
+    tower->Destroy();
+}
 void AACharacter::TowerEquip()
 {
     //拿到手上装备着的gun

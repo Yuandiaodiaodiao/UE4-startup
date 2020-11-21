@@ -4,6 +4,13 @@
 #include "Tower.h"
 
 
+FString FTowerDataCore::GenItemInfo()
+{
+    FString ss=this->Location.ToString();
+    FString s2=this->TowerClass->GetName();
+    return ss+s2;
+}
+
 ATower* FTowerDataCore::GenerateTower(UWorld* world)
 {
     AActor* NewActor = world->SpawnActor<AActor>(TowerClass, Location, FRotator(0), FActorSpawnParameters());
@@ -60,4 +67,11 @@ void ATower::EquipWeapon(AGunBase* Gun)
                                                                EAttachmentRule::SnapToTarget,
                                                                EAttachmentRule::KeepWorld, false),
                                FName("Weapon"));
+   
+    
+}
+
+FItemTable* ATower::GetData()
+{
+    return TowerData;
 }
