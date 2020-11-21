@@ -3,6 +3,8 @@
 
 #include "Tower.h"
 
+#include "RenderGraphUtils.h"
+
 
 FString FTowerDataCore::GenItemInfo()
 {
@@ -13,6 +15,8 @@ FString FTowerDataCore::GenItemInfo()
 
 ATower* FTowerDataCore::GenerateTower(UWorld* world)
 {
+    
+    
     AActor* NewActor = world->SpawnActor<AActor>(TowerClass, Location, FRotator(0), FActorSpawnParameters());
     NewActor->SetReplicates(true);
     auto CRootComponent = Cast<UStaticMeshComponent>(NewActor->GetRootComponent());

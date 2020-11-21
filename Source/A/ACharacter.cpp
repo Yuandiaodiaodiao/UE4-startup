@@ -12,6 +12,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "VisualLogger/VisualLogger.h"
 #include "Global.h"
+#include "K2Node_GetDataTableRow.h"
 #include "MyPlayerState.h"
 #include "MySaveGame.h"
 #include "MyUserWidget.h"
@@ -55,18 +56,22 @@ AACharacter::AACharacter()
     UE_LOG(LogTemp, Log, TEXT("Character inited0"));
     // Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
     // are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
-    InventoryClass=ConstructorHelpers::FClassFinder<UUserWidget>(TEXT("/Game/UI/TowerWidget_Yuan")).Class;
+    InventoryClass = ConstructorHelpers::FClassFinder<UUserWidget>(TEXT("/Game/UI/TowerWidget_Yuan")).Class;
 }
+
 void AACharacter::ShowInventory()
 {
-    auto State=(AMyPlayerState*)this->GetPlayerState();
+    auto State = (AMyPlayerState*)this->GetPlayerState();
 
-    auto InventoryWidget=(UMyUserWidget*)CreateWidget(Cast<APlayerController>(this->GetController()),InventoryClass);
+    auto InventoryWidget = (UMyUserWidget*)CreateWidget(Cast<APlayerController>(this->GetController()), InventoryClass);
     InventoryWidget->InjectInventoryData(State->Inventory);
     InventoryWidget->AddToViewport();
     // auto data=State->Inventory.Top();
+    auto datatable = LoadObject<UDataTable>(GetWorld(),TEXT("DataTable'/Game/GameData/TowerData.TowerData'"));
+    auto rowa = datatable->FindRow<FTowerDataCore>(FName("a"), FString());
     
 }
+
 AGunBase* AACharacter::GetEquippedGun_Implementation()
 {
     return nullptr;
@@ -96,33 +101,36 @@ void AACharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 
 void AACharacter::SetEquippedGun_Implementation(AGunBase* Gun)
 {
-    
 }
+
 void AACharacter::PickUpTower()
 {
-    auto tower=(ATower*)GetMouseSelected(ECC_Tower);
-    if(tower==nullptr) return;
-    auto key=UGlobal::GetInstance()->TowerArray.FindKey(tower);
+    auto tower = (ATower*)GetMouseSelected(ECC_Tower);
+    if (tower == nullptr) return;
+    auto key = UGlobal::GetInstance()->TowerArray.FindKey(tower);
     UGlobal::GetInstance()->TowerArray.Remove(*key);
     //加入
-    auto State=(AMyPlayerState*)this->GetPlayerState();
+    auto State = (AMyPlayerState*)this->GetPlayerState();
     State->Inventory.Add(tower->GetData());
-    
+    UClass* tc = ATower::StaticClass();
+
     tower->Destroy();
 }
+
 void AACharacter::TowerEquip()
 {
     //拿到手上装备着的gun
-    auto gun=GetEquippedGun();
-    auto logchar=gun==nullptr? TEXT("get gun falied"):TEXT("get gun success");
-    UE_LOG(LogTemp, Warning, TEXT("%s"),logchar);
-    if(gun==nullptr)
-    {//如果没有枪 退出
+    auto gun = GetEquippedGun();
+    auto logchar = gun == nullptr ? TEXT("get gun falied") : TEXT("get gun success");
+    UE_LOG(LogTemp, Warning, TEXT("%s"), logchar);
+    if (gun == nullptr)
+    {
+        //如果没有枪 退出
         return;
     }
     //射线检测鼠标指向的tower
-    auto tower=(ATower*)GetMouseSelected(ECC_Tower);
-    if(tower==nullptr)
+    auto tower = (ATower*)GetMouseSelected(ECC_Tower);
+    if (tower == nullptr)
     {
         return;
     }
@@ -131,20 +139,18 @@ void AACharacter::TowerEquip()
     //装备武器
     SetEquippedGun(nullptr);
     tower->EquipWeapon(gun);
-    
-    
 }
 
 AActor* AACharacter::GetMouseSelected(ECollisionChannel TraceChannel)
 {
-    
     const auto PlayerController = Cast<APlayerController>(this->Controller);
     FVector Start, Dir, End;
     //根据鼠标位置 计算出朝向和视角起点的世界坐标
-    auto bDirectionGet=PlayerController->DeprojectMousePositionToWorld(Start, Dir); //获取初始位置和方向
+    auto bDirectionGet = PlayerController->DeprojectMousePositionToWorld(Start, Dir); //获取初始位置和方向
 
     //鼠标在屏幕内
-    if(bDirectionGet){
+    if (bDirectionGet)
+    {
         //矢量求终点
         End = Start + (Dir * 8000.0f); //设置追踪终点
         FHitResult HitResult;
@@ -158,7 +164,8 @@ void AACharacter::genBuildingActor()
 {
     FVector Location = this->GetTransform().GetLocation();
 
-    AActor* NewActor = GetWorld()->SpawnActor<AActor>(ABuildingActor::StaticClass(), Location, FRotator(0), FActorSpawnParameters());
+    AActor* NewActor = GetWorld()->SpawnActor<AActor>(ABuildingActor::StaticClass(), Location, FRotator(0),
+                                                      FActorSpawnParameters());
     // NewActor->SetReplicates(true);
 
     if (PlayerInputComponent)
@@ -175,8 +182,8 @@ void AACharacter::LoadGame()
 {
     UE_LOG(LogTemp, Warning, TEXT("in LoadGame"));
     UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("AT"), 0));
-   
-    TMap<FVector,ATower*>TowerArray;
+
+    TMap<FVector, ATower*> TowerArray;
     for (auto actor : UGlobal::GetInstance()->TowerArray)
     {
         auto tower = Cast<ATower>(actor.Value);
@@ -187,39 +194,38 @@ void AACharacter::LoadGame()
             {
                 //tower指针一样 说明旧的tower还没有被销毁 只替换tower数据
                 tower->TowerData = towerfind;
-                TowerArray.Add(actor.Key,actor.Value);
+                TowerArray.Add(actor.Key, actor.Value);
             }
             else
             {
                 tower->Destroy();
 
                 //创建新的tower 销毁旧的
-                tower=towerfind->GenerateTower(GetWorld());
-                TowerArray.Add(actor.Key,tower);
+                tower = towerfind->GenerateTower(GetWorld());
+                TowerArray.Add(actor.Key, tower);
             }
         }
         else
         {
             //存档里没有 销毁炮塔
             tower->Destroy();
-            
         }
     }
-    for(auto towerData:SaveGameInstance->TowerDataArray)
+    for (auto towerData : SaveGameInstance->TowerDataArray)
     {
-        if(TowerArray.Find(towerData.Key))
+        if (TowerArray.Find(towerData.Key))
         {
             //这部分 已经处理过了
-        }else
+        }
+        else
         {
             //新增炮塔
-            auto tower=towerData.Value.GenerateTower(GetWorld());
-            TowerArray.Add(towerData.Key,tower);
+            auto tower = towerData.Value.GenerateTower(GetWorld());
+            TowerArray.Add(towerData.Key, tower);
         }
-            
     }
     //挂上新的TowerArray    
-    UGlobal::GetInstance()->TowerArray=TowerArray;
+    UGlobal::GetInstance()->TowerArray = TowerArray;
 
     UE_LOG(LogTemp, Warning, TEXT("%s"), *(SaveGameInstance->UserName));
 
@@ -288,7 +294,6 @@ void AACharacter::BeginPlay()
     UGlobal::GetInstance()->TowerArray.Reset();
     UE_LOG(LogTemp, Warning, TEXT("Clean TowerArray"));
     genBuildingActor();
-
 }
 
 void AACharacter::PostInitializeComponents()

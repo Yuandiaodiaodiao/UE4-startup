@@ -35,6 +35,8 @@ public:
     //全局的建筑物存档
     UPROPERTY(SaveGame)
     TMap<FVector,FTowerDataCore>TowerDataArray;
+
+
     
  
 };
