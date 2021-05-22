@@ -75,6 +75,11 @@ void ATower::EquipWeapon(AGunBase* Gun)
     
 }
 
+auto ATower::GetWeapon()
+{
+    
+}
+
 FItemTable* ATower::GetData()
 {
     return TowerData;

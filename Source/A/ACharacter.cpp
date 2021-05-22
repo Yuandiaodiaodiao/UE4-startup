@@ -121,8 +121,8 @@ void AACharacter::TowerEquip()
 {
     //拿到手上装备着的gun
     auto gun = GetEquippedGun();
-    auto logchar = gun == nullptr ? TEXT("get gun falied") : TEXT("get gun success");
-    UE_LOG(LogTemp, Warning, TEXT("%s"), logchar);
+    auto ishavegun = gun == nullptr ? TEXT("get gun falied") : TEXT("get gun success");
+    UE_LOG(LogTemp, Warning, TEXT("%s"), ishavegun);
     if (gun == nullptr)
     {
         //如果没有枪 退出
@@ -135,7 +135,7 @@ void AACharacter::TowerEquip()
         return;
     }
     UE_LOG(LogTemp, Warning, TEXT("selected tower"));
-
+    
     //装备武器
     SetEquippedGun(nullptr);
     tower->EquipWeapon(gun);

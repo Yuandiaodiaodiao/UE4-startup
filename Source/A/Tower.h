@@ -69,6 +69,6 @@ public:
 	}
 	
 	void EquipWeapon(AGunBase* Gun);
-
+	auto GetWeapon();
 	virtual FItemTable* GetData() override;
 };
