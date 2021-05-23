@@ -119,26 +119,39 @@ void AACharacter::PickUpTower()
 
 void AACharacter::TowerEquip()
 {
+    //射线检测鼠标指向的tower
+    auto tower = (ATower*)GetMouseSelected(ECC_Tower);
+    if (tower == nullptr)return;
+    UE_LOG(LogTemp, Warning, TEXT("selected tower"));
+
     //拿到手上装备着的gun
     auto gun = GetEquippedGun();
     auto ishavegun = gun == nullptr ? TEXT("get gun falied") : TEXT("get gun success");
     UE_LOG(LogTemp, Warning, TEXT("%s"), ishavegun);
-    if (gun == nullptr)
+
+    //拿tower的枪
+    AGunBase* GunNow=tower->GetWeapon();
+    //放枪 拔枪 互换
+    if (!gun && GunNow)
     {
-        //如果没有枪 退出
-        return;
+        //如果没有枪 尝试拔枪
+        GunNow->DetachFromActor(FDetachmentTransformRules(EDetachmentRule(),false));
     }
-    //射线检测鼠标指向的tower
-    auto tower = (ATower*)GetMouseSelected(ECC_Tower);
-    if (tower == nullptr)
+    if(!GunNow && gun)
     {
-        return;
+     //手上有枪 放枪
+        
+        gun->DetachFromActor(FDetachmentTransformRules(EDetachmentRule(),false));
     }
-    UE_LOG(LogTemp, Warning, TEXT("selected tower"));
-    
-    //装备武器
-    SetEquippedGun(nullptr);
+    if(GunNow&&gun)
+    {
+    //互换
+        GunNow->DetachFromActor(FDetachmentTransformRules(EDetachmentRule(),false));
+        gun->DetachFromActor(FDetachmentTransformRules(EDetachmentRule(),false));
+    }
+    SetEquippedGun(GunNow);
     tower->EquipWeapon(gun);
+    
 }
 
 AActor* AACharacter::GetMouseSelected(ECollisionChannel TraceChannel)
@@ -300,5 +313,5 @@ void AACharacter::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
     UE_LOG(LogTemp, Warning, TEXT("Character load in global a"));
-    UGlobal::GetInstance()->character = this;
+    // UGlobal::GetInstance()->character = this;
 }

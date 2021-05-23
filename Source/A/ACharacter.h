@@ -57,7 +57,7 @@ public:
     UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
     AGunBase* GetEquippedGun();
 
-    //获取AACharacter子类拿的枪
+    //设置AACharacter子类拿的枪
     UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
     void SetEquippedGun(AGunBase* Gun);
 

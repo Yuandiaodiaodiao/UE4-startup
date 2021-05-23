@@ -35,8 +35,10 @@ public:
     //射击的顶层实现
     UFUNCTION(BlueprintNativeEvent,BlueprintCallable, Category = "BlueprintFunc")
     void shoot(FVector StartLocation,FVector EndLocation);
-
-
+    
+    UFUNCTION(BlueprintNativeEvent,BlueprintCallable, Category = "BlueprintFunc")
+    void shoot2();
+    
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;

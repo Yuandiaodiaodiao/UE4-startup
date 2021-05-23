@@ -16,6 +16,10 @@ void AGunBase::shoot_Implementation(FVector StartLocation,FVector EndLocation)
 	
 }
 
+void AGunBase::shoot2_Implementation()
+{
+}
+
 // Called when the game starts or when spawned
 void AGunBase::BeginPlay()
 {
