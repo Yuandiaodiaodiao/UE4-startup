@@ -20,6 +20,11 @@ void AGunBase::shoot2_Implementation()
 {
 }
 
+FShootDirectionStruct AGunBase::GetShootDirection_Implementation()
+{
+	return FShootDirectionStruct();
+}
+
 // Called when the game starts or when spawned
 void AGunBase::BeginPlay()
 {

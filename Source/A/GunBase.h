@@ -19,6 +19,15 @@ enum class EGunType:uint8
     Special UMETA(DisplayName="特殊装备 "),
 };
 
+USTRUCT(BlueprintType)
+struct FShootDirectionStruct
+{
+    GENERATED_BODY()
+    UPROPERTY(EditAnywhere,BlueprintReadWrite)
+    FVector StartLocation;
+    UPROPERTY(EditAnywhere,BlueprintReadWrite)
+    FVector EndLocation;
+};
 UCLASS(BlueprintType)
 class A_API AGunBase : public AActor
 {
@@ -38,7 +47,10 @@ public:
     
     UFUNCTION(BlueprintNativeEvent,BlueprintCallable, Category = "BlueprintFunc")
     void shoot2();
-    
+
+    //对于直线型武器 返回起点终点 对于抛物线武器返回 矢量发射方向 和 矢量力
+    UFUNCTION(BlueprintNativeEvent,BlueprintCallable,Category="BlueprintHook")
+    FShootDirectionStruct GetShootDirection();
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
