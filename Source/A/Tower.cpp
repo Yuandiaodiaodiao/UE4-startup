@@ -2,7 +2,7 @@
 
 
 #include "Tower.h"
-
+#include "TowerAIController.h"
 
 
 
@@ -15,8 +15,8 @@ FString FTowerDataCore::GenItemInfo()
 
 ATower* FTowerDataCore::GenerateTower(UWorld* world)
 {
-	AActor* NewActor = world->SpawnActor<AActor>(TowerClass, Location, FRotator(0), FActorSpawnParameters());
-	NewActor->SetReplicates(true);
+	ATower* NewActor = world->SpawnActor<ATower>(TowerClass, Location, FRotator(0), FActorSpawnParameters());
+	// NewActor->SetReplicates(true);
 	auto CRootComponent = Cast<UStaticMeshComponent>(NewActor->GetRootComponent());
 	CRootComponent->SetCollisionProfileName(FName("Tower"));
 	Tower = Cast<ATower>(NewActor);
@@ -29,6 +29,7 @@ ATower* FTowerDataCore::GenerateTower(UWorld* world)
 // Sets default values
 ATower::ATower()
 {
+	SpawnCollisionHandlingMethod=ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	SuperMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("building"));
@@ -65,8 +66,8 @@ void ATower::Tick(float DeltaTime)
 		auto gun=GetWeapon();
 		if(gun)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("射了！"));
-			gun->shoot2();
+			// UE_LOG(LogTemp, Warning, TEXT("射了！"));
+			// gun->shoot2();
 		}
 
 }
@@ -81,6 +82,18 @@ void ATower::EquipWeapon(AGunBase* Gun)
 	auto gun=GetWeapon();
 	if(gun)
 	{
+		//装备武器成功
+		if(this->TowerAIController==nullptr)
+		{
+			TowerAIController=GetWorld()->SpawnActor<ATowerAIController>(ATowerAIController::StaticClass(),FActorSpawnParameters());
+			if(TowerAIController)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("%s towercontroller挂载成功 %s"),*this->GetName(),*TowerAIController->GetName());
+				TowerAIController->Possess(this);
+			}
+			
+		}
+		//检查并赋予controller
 		UE_LOG(LogTemp, Warning, TEXT("挂载gun成功"));
 		gun->shoot2();
 	}else

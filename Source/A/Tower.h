@@ -7,10 +7,7 @@
 
 #include "GunBase.h"
 #include "ItemInterface.h"
-#include "Engine/DataTable.h"
-#include "GameFramework/Actor.h"
 #include "Tower.generated.h"
-
 class A_API ATower;
 
 USTRUCT(BlueprintType)
@@ -37,6 +34,10 @@ struct  FTowerDataCore : public FItemTable
  * Tower的基类 能被建造 破坏 有ai 能进行攻击
  *
  */
+
+class A_API ATowerAIController;
+
+
 UCLASS(BlueprintType)
 class A_API ATower : public APawn,public IItemInterface
 {
@@ -71,4 +72,6 @@ public:
 	void EquipWeapon(AGunBase* Gun);
 	AGunBase* GetWeapon();
 	virtual FItemTable* GetData() override;
+
+	ATowerAIController* TowerAIController;
 };

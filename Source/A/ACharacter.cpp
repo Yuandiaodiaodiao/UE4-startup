@@ -179,7 +179,7 @@ void AACharacter::genBuildingActor()
 {
     FVector Location = this->GetTransform().GetLocation();
 
-    AActor* NewActor = GetWorld()->SpawnActor<AActor>(ABuildingActor::StaticClass(), Location, FRotator(0),
+    AActor* NewActor = GetWorld()->SpawnActor<ABuildingActor>(ABuildingActor::StaticClass(), Location, FRotator(0),
                                                       FActorSpawnParameters());
     // NewActor->SetReplicates(true);
 
@@ -306,14 +306,8 @@ void AACharacter::BeginPlay()
 {
     Super::BeginPlay();
 
-    Cast<AMyGameStateBase>(GetWorld()->GetGameState())->TowerArray.Reset();
+    Cast<AMyGameStateBase>(GetWorld()->GetGameState())->TowerArray.Empty();
     UE_LOG(LogTemp, Warning, TEXT("Clean TowerArray"));
     genBuildingActor();
 }
 
-void AACharacter::PostInitializeComponents()
-{
-    Super::PostInitializeComponents();
-    UE_LOG(LogTemp, Warning, TEXT("Character load in global a"));
-    // Cast<AMyGameStateBase>(GetWorld()->GetGameState())->character = this;
-}

@@ -35,16 +35,16 @@ protected:
 
     // APawn interface
     virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
-    void genBuildingActor();
+    
     void LoadGame();
     void SaveGame();
     // End of APawn interface
 
 
 public:
+    void genBuildingActor();
     UInputComponent* PlayerInputComponent;
     void BeginPlay();
-    void PostInitializeComponents();
     AACharacter();
     void ShowInventory();
     UGameInstance* instance;
