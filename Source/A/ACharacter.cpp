@@ -11,8 +11,8 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "VisualLogger/VisualLogger.h"
-#include "Global.h"
 #include "K2Node_GetDataTableRow.h"
+#include "MyGameStateBase.h"
 #include "MyPlayerState.h"
 #include "MySaveGame.h"
 #include "MyUserWidget.h"
@@ -107,8 +107,10 @@ void AACharacter::PickUpTower()
 {
     auto tower = (ATower*)GetMouseSelected(ECC_Tower);
     if (tower == nullptr) return;
-    auto key = UGlobal::GetInstance()->TowerArray.FindKey(tower);
-    UGlobal::GetInstance()->TowerArray.Remove(*key);
+    
+    auto key = Cast<AMyGameStateBase>(GetWorld()->GetGameState())->
+    TowerArray.FindKey(tower);
+    Cast<AMyGameStateBase>(GetWorld()->GetGameState())->TowerArray.Remove(*key);
     //加入
     auto State = (AMyPlayerState*)this->GetPlayerState();
     State->Inventory.Add(tower->GetData());
@@ -197,7 +199,7 @@ void AACharacter::LoadGame()
     UMySaveGame* SaveGameInstance = Cast<UMySaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("AT"), 0));
 
     TMap<FVector, ATower*> TowerArray;
-    for (auto actor : UGlobal::GetInstance()->TowerArray)
+    for (auto actor : Cast<AMyGameStateBase>(GetWorld()->GetGameState())->TowerArray)
     {
         auto tower = Cast<ATower>(actor.Value);
         if (auto towerfind = SaveGameInstance->TowerDataArray.Find(actor.Key))
@@ -238,7 +240,7 @@ void AACharacter::LoadGame()
         }
     }
     //挂上新的TowerArray    
-    UGlobal::GetInstance()->TowerArray = TowerArray;
+    Cast<AMyGameStateBase>(GetWorld()->GetGameState())->TowerArray = TowerArray;
 
     UE_LOG(LogTemp, Warning, TEXT("%s"), *(SaveGameInstance->UserName));
 
@@ -256,7 +258,7 @@ void AACharacter::SaveGame()
         // SaveGameInstance->PlayerName = TEXT("PlayerOne");
 
         //保存所有的TowerData
-        for (auto actor : UGlobal::GetInstance()->TowerArray)
+        for (auto actor : Cast<AMyGameStateBase>(GetWorld()->GetGameState())->TowerArray)
         {
             auto atower = Cast<ATower>(actor.Value);
             SaveGameInstance->TowerDataArray.Add(actor.Key, *atower->TowerData);
@@ -304,7 +306,7 @@ void AACharacter::BeginPlay()
 {
     Super::BeginPlay();
 
-    UGlobal::GetInstance()->TowerArray.Reset();
+    Cast<AMyGameStateBase>(GetWorld()->GetGameState())->TowerArray.Reset();
     UE_LOG(LogTemp, Warning, TEXT("Clean TowerArray"));
     genBuildingActor();
 }
@@ -313,5 +315,5 @@ void AACharacter::PostInitializeComponents()
 {
     Super::PostInitializeComponents();
     UE_LOG(LogTemp, Warning, TEXT("Character load in global a"));
-    // UGlobal::GetInstance()->character = this;
+    // Cast<AMyGameStateBase>(GetWorld()->GetGameState())->character = this;
 }

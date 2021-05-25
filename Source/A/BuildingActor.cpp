@@ -3,8 +3,7 @@
 
 
 #include "Math/UnrealMathUtility.h"
-#include "Global.h"
-
+#include "MyGameStateBase.h"
 
 
 #include "Tower.h"
@@ -104,7 +103,7 @@ void ABuildingActor::NextBuilding()
 void ABuildingActor::PutBuilding()
 {
     const FVector Location = this->GetTransform().GetLocation();
-    if (UGlobal::GetInstance()->TowerArray.Contains(Location))
+    if (Cast<AMyGameStateBase>(GetWorld()->GetGameState())->TowerArray.Contains(Location))
     {
         UE_LOG(LogTemp, Error, TEXT("cant build at same position"));
         return;
@@ -119,7 +118,7 @@ void ABuildingActor::PutBuilding()
     const auto Tower=TowerDataCore->GenerateTower(GetWorld());
     
 
-    UGlobal::GetInstance()->TowerArray.Add(Location, Tower);
+    Cast<AMyGameStateBase>(GetWorld()->GetGameState())->TowerArray.Add(Location, Tower);
 }
 
 // Called every frame

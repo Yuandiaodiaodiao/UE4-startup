@@ -38,7 +38,7 @@ struct  FTowerDataCore : public FItemTable
  *
  */
 UCLASS(BlueprintType)
-class A_API ATower : public AActor,public IItemInterface
+class A_API ATower : public APawn,public IItemInterface
 {
 	GENERATED_BODY()
 	
