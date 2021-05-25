@@ -23,8 +23,7 @@ public:
     UFUNCTION(BlueprintCallable)
     static UGlobal* GetInstance();
     
-    UPROPERTY(BlueprintReadWrite)
-    AACharacter* character;
+    
 
     
     UGlobal();
