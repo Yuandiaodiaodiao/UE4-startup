@@ -8,6 +8,19 @@
 #include "GameFramework/Character.h"
 #include "ACharacter.generated.h"
 
+
+
+USTRUCT(BlueprintType)
+struct FHealthDataStruct
+{
+    GENERATED_BODY()
+    UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Health")
+    float Health;
+    UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Health")
+    float MaxHealth;
+};
+
+
 UCLASS(config=Game)
 class AACharacter : public ACharacter
 {
@@ -42,6 +55,9 @@ protected:
 
 
 public:
+    UPROPERTY(BlueprintReadWrite,EditAnywhere)
+    FHealthDataStruct HealthData;
+    
     void genBuildingActor();
     UInputComponent* PlayerInputComponent;
     void BeginPlay();
