@@ -6,6 +6,16 @@
 #include "UObject/Interface.h"
 #include "HealthDataInterface.generated.h"
 
+USTRUCT(BlueprintType)
+struct FHealthDataStruct
+{
+	GENERATED_BODY()
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Health")
+	float Health;
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Health")
+	float MaxHealth;
+};
+
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
 class UHealthDataInterface : public UInterface

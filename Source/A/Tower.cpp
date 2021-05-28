@@ -29,6 +29,8 @@ ATower* FTowerDataCore::GenerateTower(UWorld* world)
 // Sets default values
 ATower::ATower()
 {
+
+	AutoPossessAI=EAutoPossessAI::Disabled;
 	SpawnCollisionHandlingMethod=ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -121,5 +123,11 @@ AGunBase* ATower::GetWeapon()
 
 FItemTable* ATower::GetData()
 {
+	
 	return TowerData;
+}
+
+FGenericTeamId ATower::GetGenericTeamId() const
+{
+	return FGenericTeamId(1);
 }

@@ -25,4 +25,7 @@ class A_API ATowerAIController : public AAIController
 	virtual void Tick(float DeltaSeconds) override;
 	UFUNCTION()
 	void OnPerceptionUpdated(const TArray<AActor*>&ActorArray);
+
+	//1号单位
+	FGenericTeamId GetGenericTeamId() const override;
 };

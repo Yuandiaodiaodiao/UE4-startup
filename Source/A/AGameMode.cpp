@@ -3,6 +3,7 @@
 #include "AGameMode.h"
 #include "ACharacter.h"
 #include "MyGameStateBase.h"
+#include "MyPlayerController.h"
 #include "MyPlayerState.h"
 #include "UObject/ConstructorHelpers.h"
 
@@ -16,4 +17,5 @@ AAGameMode::AAGameMode()
 	}
 	PlayerStateClass=AMyPlayerState::StaticClass();
 	GameStateClass=AMyGameStateBase::StaticClass();
+	PlayerControllerClass=AMyPlayerController::StaticClass();
 }

@@ -4,6 +4,7 @@
 #include "TowerAIController.h"
 #include "Tower.h"
 #include "DrawDebugHelpers.h"
+#include "MyMacro.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Perception/AISenseConfig_Sight.h"
 #include "Perception/AIPerceptionComponent.h"
@@ -16,10 +17,10 @@ ATowerAIController::ATowerAIController()
 	UAISenseConfig_Sight* AiConfigSight = CreateDefaultSubobject<UAISenseConfig_Sight>(TEXT("AIConfig"));
 	AiConfigSight->SightRadius = 500;
 	AiConfigSight->LoseSightRadius = 600;
-	AiConfigSight->PeripheralVisionAngleDegrees = 360;
-	AiConfigSight->DetectionByAffiliation.bDetectEnemies = 0;
-	AiConfigSight->DetectionByAffiliation.bDetectFriendlies = 1;
-	AiConfigSight->DetectionByAffiliation.bDetectNeutrals = 1	;
+	AiConfigSight->PeripheralVisionAngleDegrees = 180;
+	AiConfigSight->DetectionByAffiliation.bDetectEnemies = 1;
+	AiConfigSight->DetectionByAffiliation.bDetectFriendlies = 0;
+	AiConfigSight->DetectionByAffiliation.bDetectNeutrals = 0;
 	AiConfigSight->GetDebugColor();
 	AiComponent->ConfigureSense(*AiConfigSight);
 	AiComponent->SetDominantSense(UAISenseConfig_Sight::StaticClass());
@@ -39,7 +40,7 @@ void ATowerAIController::Tick(float DeltaSeconds)
 	}
 	if (ActorsBeSee.Num() > 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("有了"));
+		// UE_LOG(LogTemp, Warning, TEXT("有了"));
 		
 		auto target = ActorsBeSee.HeapTop();
 		auto ShootDirection=this->GetTower()->GetWeapon()->GetShootDirection();
@@ -64,5 +65,25 @@ void ATowerAIController::Tick(float DeltaSeconds)
 
 void ATowerAIController::OnPerceptionUpdated(const TArray<AActor*>& ActorArray)
 {
+	LOGWARNING("OnPerceptionUpdated%d",ActorArray.Num())
 	ActorsBeSee = ActorArray;
+	for(auto actor : ActorArray)
+	{
+		
+		LOGWARNING("%s",*actor->GetName())
+		const IGenericTeamAgentInterface* OtherTeamAgent = Cast<const IGenericTeamAgentInterface>(actor);
+		if(OtherTeamAgent)
+		{
+			LOGWARNING("I ID=%d",OtherTeamAgent->GetGenericTeamId().GetId())
+		}else
+		{
+			LOGWARNING("无阵容")
+		}
+	
+	}
+}
+
+FGenericTeamId ATowerAIController::GetGenericTeamId() const
+{
+	return FGenericTeamId(1);
 }

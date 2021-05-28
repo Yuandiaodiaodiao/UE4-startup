@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 
 
+
+#include "GenericTeamAgentInterface.h"
 #include "GunBase.h"
 #include "ItemInterface.h"
 #include "Tower.generated.h"
@@ -39,7 +41,7 @@ class A_API ATowerAIController;
 
 
 UCLASS(BlueprintType)
-class A_API ATower : public APawn,public IItemInterface
+class A_API ATower : public APawn,public IItemInterface,public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 	
@@ -74,4 +76,6 @@ public:
 	virtual FItemTable* GetData() override;
 
 	ATowerAIController* TowerAIController;
+
+	FGenericTeamId GetGenericTeamId() const override;
 };

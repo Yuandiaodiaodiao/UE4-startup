@@ -4,6 +4,7 @@
 
 
 #include "A.h"
+#include "AISystem.h"
 #include "BuildingActor.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -18,6 +19,7 @@
 #include "MyUserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
+#include "Perception/AIPerceptionSystem.h"
 
 
 AACharacter::AACharacter()
@@ -57,6 +59,7 @@ AACharacter::AACharacter()
     // Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
     // are set in the derived blueprint asset named MyCharacter (to avoid direct content references in C++)
     InventoryClass = ConstructorHelpers::FClassFinder<UUserWidget>(TEXT("/Game/UI/TowerWidget_Yuan")).Class;
+
 }
 
 void AACharacter::ShowInventory()
@@ -173,6 +176,11 @@ AActor* AACharacter::GetMouseSelected(ECollisionChannel TraceChannel)
         return HitResult.GetActor();
     }
     return nullptr;
+}
+
+FGenericTeamId AACharacter::GetGenericTeamId() const
+{
+    return FGenericTeamId(1);
 }
 
 void AACharacter::genBuildingActor()
