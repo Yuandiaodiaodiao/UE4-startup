@@ -24,7 +24,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-
+	UPROPERTY(BlueprintReadWrite,EditAnywhere)
+	TObjectPtr<USkeletalMeshComponent>Skeletal;
+	
 	FHealthDataStruct& GetHealthData();
 
 	// Called every frame

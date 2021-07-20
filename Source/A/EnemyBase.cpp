@@ -12,6 +12,12 @@ AEnemyBase::AEnemyBase()
 	AutoPossessAI=EAutoPossessAI::Disabled;
 	SpawnCollisionHandlingMethod=ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 	
+	static auto skele = ConstructorHelpers::FObjectFinderOptional<USkeletalMesh>(
+        TEXT("SkeletalMesh'/Game/Enemy/Enemy2/柱体.柱体'")).Get();
+	Skeletal=CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("skele"));
+	Skeletal->SetSkeletalMesh(skele);
+	this->SetRootComponent(Skeletal);
+	
 }
 
 // Called when the game starts or when spawned
