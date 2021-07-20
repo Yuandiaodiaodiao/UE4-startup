@@ -50,9 +50,14 @@ protected:
 
 
 public:
+    void test()
+    {
+        GetHealth();
+    }
     UPROPERTY(BlueprintReadWrite,EditAnywhere)
     FHealthDataStruct HealthData;
     
+    FHealthDataStruct& GetHealthData() override{return HealthData; };
     void genBuildingActor();
     UInputComponent* PlayerInputComponent;
     void BeginPlay();
