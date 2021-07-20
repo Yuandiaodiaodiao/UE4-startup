@@ -183,6 +183,11 @@ FGenericTeamId AACharacter::GetGenericTeamId() const
     return FGenericTeamId(1);
 }
 
+FHealthDataStruct& AACharacter::GetHealthData()
+{
+    return HealthData;
+}
+
 void AACharacter::genBuildingActor()
 {
     FVector Location = this->GetTransform().GetLocation();

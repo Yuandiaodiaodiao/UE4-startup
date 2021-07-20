@@ -17,13 +17,16 @@ public:
 	// Sets default values for this pawn's properties
 	AEnemyBase();
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Health")
-	FHealthDataStruct HealthDataStruct;
+	FHealthDataStruct HealthData;
 	
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
+
+	FHealthDataStruct& GetHealthData();
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

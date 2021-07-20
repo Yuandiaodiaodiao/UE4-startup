@@ -56,8 +56,8 @@ public:
     }
     UPROPERTY(BlueprintReadWrite,EditAnywhere)
     FHealthDataStruct HealthData;
-    
-    FHealthDataStruct& GetHealthData() override{return HealthData; };
+
+    FHealthDataStruct& GetHealthData();
     void genBuildingActor();
     UInputComponent* PlayerInputComponent;
     void BeginPlay();

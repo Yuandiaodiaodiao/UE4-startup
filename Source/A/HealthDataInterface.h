@@ -37,9 +37,10 @@ public:
 	
 	float GetHealth()
 	{
-		return GetHealthData().Health;
+		return 0;
+		// return GetHealthData().Health;
 	}
 	
-	virtual FHealthDataStruct& GetHealthData();
+	virtual FHealthDataStruct& GetHealthData()=0;
 	
 };
