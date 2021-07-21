@@ -178,10 +178,6 @@ AActor* AACharacter::GetMouseSelected(ECollisionChannel TraceChannel)
 	return nullptr;
 }
 
-FGenericTeamId AACharacter::GetGenericTeamId() const
-{
-	return FGenericTeamId(1);
-}
 
 FHealthDataStruct& AACharacter::GetHealthData()
 {

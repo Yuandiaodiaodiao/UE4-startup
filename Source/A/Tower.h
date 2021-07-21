@@ -13,7 +13,7 @@
 class A_API ATower;
 
 USTRUCT(BlueprintType)
-struct FTowerDataCore : public FItemTable, public IHealthDataInterface, public IGenericTeamAgentInterface
+struct FTowerDataCore : public FItemTable
 {
 	GENERATED_BODY()
 	//tower的class 用于 spawnActor
@@ -41,7 +41,7 @@ class A_API ATowerAIController;
 
 
 UCLASS(BlueprintType)
-class A_API ATower : public APawn, public IItemInterface, public IGenericTeamAgentInterface,public IHealthDataInterface
+class A_API ATower : public APawn, public IItemInterface, public IGenericTeamAgentInterface, public IHealthDataInterface
 {
 	GENERATED_BODY()
 
