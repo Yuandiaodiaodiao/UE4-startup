@@ -19,6 +19,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health")
 	FHealthDataStruct HealthData;
 
+	FHealthDataStruct& GetHealthData() { return HealthData; }
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -32,7 +34,6 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	TObjectPtr<USkeletalMeshComponent> Skeletal;
 
-	FHealthDataStruct& GetHealthData();
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

@@ -5,7 +5,6 @@
 #include "TowerAIController.h"
 
 
-
 FString FTowerDataCore::GenItemInfo()
 {
 	FString ss = this->Location.ToString();
@@ -29,9 +28,8 @@ ATower* FTowerDataCore::GenerateTower(UWorld* world)
 // Sets default values
 ATower::ATower()
 {
-
-	AutoPossessAI=EAutoPossessAI::Disabled;
-	SpawnCollisionHandlingMethod=ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	AutoPossessAI = EAutoPossessAI::Disabled;
+	SpawnCollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	SuperMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("building"));
@@ -57,50 +55,51 @@ void ATower::BeginPlay()
 	Super::BeginPlay();
 }
 
+
 // Called every frame
 void ATower::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	//射个激光
-	
-		
 
-		auto gun=GetWeapon();
-		if(gun)
-		{
-			// UE_LOG(LogTemp, Warning, TEXT("射了！"));
-			// gun->shoot2();
-		}
 
+	auto gun = GetWeapon();
+	if (gun)
+	{
+		// UE_LOG(LogTemp, Warning, TEXT("射了！"));
+		// gun->shoot2();
+	}
 }
 
 void ATower::EquipWeapon(AGunBase* Gun)
 {
 	if (Gun)
 		Gun->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
-                                                           EAttachmentRule::SnapToTarget,
-                                                           EAttachmentRule::KeepWorld, false),
-                           FName("Weapon"));
-	auto gun=GetWeapon();
-	if(gun)
+		                                                   EAttachmentRule::SnapToTarget,
+		                                                   EAttachmentRule::KeepWorld, false),
+		                   FName("Weapon"));
+	auto gun = GetWeapon();
+	if (gun)
 	{
 		//装备武器成功
-		if(this->TowerAIController==nullptr)
+		if (this->TowerAIController == nullptr)
 		{
-			TowerAIController=GetWorld()->SpawnActor<ATowerAIController>(ATowerAIController::StaticClass(),FActorSpawnParameters());
-			if(TowerAIController)
+			TowerAIController = GetWorld()->SpawnActor<ATowerAIController>(
+				ATowerAIController::StaticClass(), FActorSpawnParameters());
+			if (TowerAIController)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("%s towercontroller挂载成功 %s"),*this->GetName(),*TowerAIController->GetName());
+				UE_LOG(LogTemp, Warning, TEXT("%s towercontroller挂载成功 %s"), *this->GetName(),
+				       *TowerAIController->GetName());
 				TowerAIController->Possess(this);
 			}
-			
 		}
 		//检查并赋予controller
 		UE_LOG(LogTemp, Warning, TEXT("挂载gun成功"));
 		gun->shoot2();
-	}else
+	}
+	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%d"),(gun));
+		UE_LOG(LogTemp, Warning, TEXT("%d"), (gun));
 	}
 }
 
@@ -123,7 +122,6 @@ AGunBase* ATower::GetWeapon()
 
 FItemTable* ATower::GetData()
 {
-	
 	return TowerData;
 }
 

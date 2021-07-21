@@ -38,10 +38,7 @@ void AEnemyBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-FHealthDataStruct& AEnemyBase::GetHealthData()
-{
-	return HealthData;
-}
+
 
 // Called every frame
 void AEnemyBase::Tick(float DeltaTime)

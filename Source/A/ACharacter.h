@@ -80,5 +80,5 @@ public:
 
 	//获取玩家鼠标选中的物体
 	AActor* GetMouseSelected(ECollisionChannel TraceChannel);
-	FGenericTeamId GetGenericTeamId() const override;
+	virtual FGenericTeamId GetGenericTeamId() const override { return FGenericTeamId(1); }
 };
