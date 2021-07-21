@@ -16,17 +16,22 @@ class A_API AEnemyBase : public APawn, public IGenericTeamAgentInterface, public
 public:
 	// Sets default values for this pawn's properties
 	AEnemyBase();
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Health")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Health")
 	FHealthDataStruct HealthData;
-	
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
-	UPROPERTY(BlueprintReadWrite,EditAnywhere)
-	TObjectPtr<USkeletalMeshComponent>Skeletal;
-	
+	// UFUNCTION()
+	// void TakePointDamage(AActor* DamagedActor, float Damage, AController* InstigatedBy, FVector HitLocation,
+	//                             UPrimitiveComponent* FHitComponent, FName BoneName, FVector ShotFromDirection,
+	//                             const UDamageType* DamageType, AActor* DamageCauser);
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	TObjectPtr<USkeletalMeshComponent> Skeletal;
+
 	FHealthDataStruct& GetHealthData();
 
 	// Called every frame

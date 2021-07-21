@@ -3,6 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
+#include "MyMacro.h"
 #include "UObject/Interface.h"
 #include "HealthDataInterface.generated.h"
 
@@ -10,9 +12,9 @@ USTRUCT(BlueprintType)
 struct FHealthDataStruct
 {
 	GENERATED_BODY()
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Health")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float Health;
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category = "Health")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	float MaxHealth;
 };
 
@@ -33,14 +35,36 @@ class A_API IHealthDataInterface
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 
-	
-	
-	float GetHealth()
+
+	virtual float GetHealth()
 	{
-		return 0;
-		// return GetHealthData().Health;
+		return GetHealthData().Health;
 	}
-	
-	virtual FHealthDataStruct& GetHealthData()=0;
-	
+
+	virtual FHealthDataStruct& GetHealthData() =0;
+
+	UFUNCTION()
+	virtual void TakePointDamage(AActor* DamagedActor, float Damage, AController* InstigatedBy, FVector HitLocation,
+	                     UPrimitiveComponent* FHitComponent, FName BoneName, FVector ShotFromDirection,
+	                     const UDamageType* DamageType, AActor* DamageCauser)
+	{
+		LOGWARNING("PointDamage from %s to %s value=%f", *DamageCauser->GetName(), *DamagedActor->GetName(),Damage)
+		
+	}
+
+	UFUNCTION()
+	virtual void TakeAnyDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType,
+	                   class AController* InstigatedBy, AActor* DamageCauser)
+	{
+		LOGWARNING("AnyDamage from %s to %s value=%f", *DamageCauser->GetName(), *DamagedActor->GetName(),Damage)
+		GetHealthData().Health -= Damage;
+	}
+
+	UFUNCTION()
+	virtual void TakeRadialDamage(AActor* DamagedActor, float Damage, const UDamageType* DamageType, FVector Origin,
+	                      FHitResult HitInfo, AController* InstigatedBy, AActor* DamageCauser)
+	{
+		LOGWARNING("RadialDamage from %s to %s value=%f", *DamageCauser->GetName(), *DamagedActor->GetName(),Damage)
+
+	}
 };
