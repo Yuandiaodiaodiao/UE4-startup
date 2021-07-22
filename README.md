@@ -24,3 +24,5 @@
 ## towerController设计
 controller 负责保存
 
+## 武器“魔方系统”  
+3x3x3的立体俄罗斯方块/魔方系统,提供武器加成

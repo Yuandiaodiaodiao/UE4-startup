@@ -34,7 +34,7 @@ AGunBase::AGunBase()
 
 void AGunBase::shoot()
 {
-	if(GetWorld()->GetTimeSeconds()-AllowShootTime>=0)
+	if(GetWorld()->GetTimeSeconds()>=AllowShootTime)
 	{
 	UE_LOG(LogTemp,Display,TEXT("%d"),RoundRemain)
 	if(RoundRemain>0)
@@ -48,6 +48,7 @@ void AGunBase::shoot()
 			//UKismetSystemLibrary::LineTraceMulti(GetWorld(),Muzzle->GetComponentLocation(),Muzzle->GetComponentLocation()+Range*Muzzle->GetForwardVector(),ETraceTypeQuery::,0,NULL,EDrawDebugTrace::ForDuration,OutHits,1);
 			GetWorld()->LineTraceMultiByChannel(OutHits,StartPosition,EndPosition,ECollisionChannel::ECC_Visibility);
             //MuzzleEmitter->Activate();
+			//TODO 对射线检测结果进行处理
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),GunFireEmitter,StartPosition);
 			RoundRemain--;
 			UE_LOG(LogTemp,Display,TEXT("%d"),RoundRemain)
@@ -62,6 +63,8 @@ void AGunBase::shoot()
 	
 }
 
+
+
 void AGunBase::shoot2_Implementation()
 {
 }
@@ -69,6 +72,11 @@ void AGunBase::shoot2_Implementation()
 FShootDirectionStruct AGunBase::GetShootDirection_Implementation()
 {
 	return FShootDirectionStruct();
+}
+
+void AGunBase::ReloadEventDelegateBroadCast(bool bSuccess,int32 Ammo)
+{
+	ReloadEventDelegate.Broadcast(bSuccess,Ammo);
 }
 
 // Called when the game starts or when spawned

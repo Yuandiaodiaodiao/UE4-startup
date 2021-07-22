@@ -72,6 +72,8 @@ public:
     UPROPERTY(BlueprintReadWrite,EditAnywhere)
     float ReloadTime;
     UPROPERTY(BlueprintReadWrite,EditAnywhere)
+    float TaticalReloadTime;
+    UPROPERTY(BlueprintReadWrite,EditAnywhere)
     TObjectPtr<UParticleSystem> GunFireEmitter;
     
     ///////////////////////////////////////////武器升级和自定义/////////////////////////////////////////
@@ -108,13 +110,26 @@ public:
     void shoot();
     UFUNCTION(BlueprintNativeEvent,BlueprintCallable, Category = "BlueprintFunc")
     void shoot2();
+    UFUNCTION(BlueprintImplementableEvent,BlueprintCallable,  Category = "BlueprintFunc")
+    void Reload(int32 Ammo);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FReceiveDelegateEvent,bool,bSuccess,int32,Ammo);
+    UPROPERTY(BlueprintAssignable, Category = "Event")
+    FReceiveDelegateEvent  ReloadEventDelegate;
+    UFUNCTION(BlueprintCallable,Category = "BlueprintFunc")
+    void ReloadEventDelegateBroadCast(bool bSuccess,int32 Ammo);
     ////////////////////////////////RunTime数据//////////////////////////////////////////////////
     //剩余弹药数量
     UPROPERTY(BlueprintReadWrite,EditAnywhere)
     int32 RoundRemain;
     //下次允许开火的时间
     UPROPERTY(BlueprintReadWrite,EditAnywhere)
-    int32 AllowShootTime=0;
+    float AllowShootTime=0;
+    //换弹阶段
+    UPROPERTY(BlueprintReadWrite,EditAnywhere)
+    int32 ReloadingStage;
+    //是否被人、炮塔装备
+    UPROPERTY(BlueprintReadWrite,EditAnywhere)
+    bool IsEquipped;
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
