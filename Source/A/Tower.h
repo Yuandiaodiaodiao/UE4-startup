@@ -6,8 +6,8 @@
 
 
 #include "GenericTeamAgentInterface.h"
-#include "GunBase.h"
 #include "HealthDataInterface.h"
+#include "HoldGunInterface.h"
 #include "ItemInterface.h"
 #include "Tower.generated.h"
 class A_API ATower;
@@ -41,7 +41,8 @@ class A_API ATowerAIController;
 
 
 UCLASS(BlueprintType)
-class A_API ATower : public APawn, public IItemInterface, public IGenericTeamAgentInterface, public IHealthDataInterface
+class A_API ATower : public APawn, public IItemInterface, public IGenericTeamAgentInterface,
+                     public IHealthDataInterface, public IHoldGunInterface
 {
 	GENERATED_BODY()
 
@@ -76,11 +77,12 @@ public:
 		return *TowerData;
 	}
 
-	void EquipWeapon(AGunBase* Gun);
-	AGunBase* GetWeapon();
+
 	virtual FItemTable* GetData() override;
 
 	ATowerAIController* TowerAIController;
 
 	FGenericTeamId GetGenericTeamId() const override;
+
+	void AutoInitController();
 };

@@ -71,54 +71,6 @@ void ATower::Tick(float DeltaTime)
 	}
 }
 
-void ATower::EquipWeapon(AGunBase* Gun)
-{
-	if (Gun)
-		Gun->AttachToActor(this, FAttachmentTransformRules(EAttachmentRule::SnapToTarget,
-		                                                   EAttachmentRule::SnapToTarget,
-		                                                   EAttachmentRule::KeepWorld, false),
-		                   FName("Weapon"));
-	auto gun = GetWeapon();
-	if (gun)
-	{
-		//装备武器成功
-		if (this->TowerAIController == nullptr)
-		{
-			TowerAIController = GetWorld()->SpawnActor<ATowerAIController>(
-				ATowerAIController::StaticClass(), FActorSpawnParameters());
-			if (TowerAIController)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("%s towercontroller挂载成功 %s"), *this->GetName(),
-				       *TowerAIController->GetName());
-				TowerAIController->Possess(this);
-			}
-		}
-		//检查并赋予controller
-		UE_LOG(LogTemp, Warning, TEXT("挂载gun成功"));
-		gun->shoot2();
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%d"), (gun));
-	}
-}
-
-AGunBase* ATower::GetWeapon()
-{
-	AGunBase* gun = nullptr;
-	this->ForEachAttachedActors(
-		[&gun](AActor* Actor)
-		{
-			if (Actor->GetClass()->IsChildOf(AGunBase::StaticClass()))
-			{
-				gun = Cast<AGunBase>(Actor);
-				return false;
-			}
-			else return true;
-		});
-
-	return gun;
-}
 
 FItemTable* ATower::GetData()
 {
@@ -128,4 +80,20 @@ FItemTable* ATower::GetData()
 FGenericTeamId ATower::GetGenericTeamId() const
 {
 	return FGenericTeamId(1);
+}
+
+//检查并赋予controller
+void ATower::AutoInitController()
+{
+	if (this->TowerAIController == nullptr)
+	{
+		TowerAIController = GetWorld()->SpawnActor<ATowerAIController>(
+			ATowerAIController::StaticClass(), FActorSpawnParameters());
+		if (TowerAIController)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%s towercontroller挂载成功 %s"), *this->GetName(),
+			       *TowerAIController->GetName());
+			TowerAIController->Possess(this);
+		}
+	}
 }

@@ -134,7 +134,6 @@ void AACharacter::TowerEquip()
 	auto gun = GetEquippedGun();
 	auto ishavegun = gun == nullptr ? TEXT("get gun falied") : TEXT("get gun success");
 	UE_LOG(LogTemp, Warning, TEXT("%s"), ishavegun);
-
 	//拿tower的枪
 	AGunBase* GunNow = tower->GetWeapon();
 	//放枪 拔枪 互换
