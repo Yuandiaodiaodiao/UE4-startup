@@ -4,10 +4,12 @@ using UnrealBuildTool;
 
 public class A : ModuleRules
 {
-	public A(ReadOnlyTargetRules Target) : base(Target)
-	{
-		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
+    public A(ReadOnlyTargetRules Target) : base(Target)
+    {
+        PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore","Json","JsonUtilities" });
-	}
+        PublicDependencyModuleNames.AddRange(new string[]
+            {"Core", "CoreUObject", "Engine", "InputCore", "Json", "JsonUtilities", "UMG"});
+        // PrivateDependencyModuleNames.AddRange(new string[] {"Slate", "SlateCore"});
+    }
 }

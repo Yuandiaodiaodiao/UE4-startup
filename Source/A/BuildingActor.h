@@ -13,7 +13,7 @@ UCLASS()
 class A_API ABuildingActor : public AActor
 {
 	GENERATED_BODY()
-	AActor* ActorToShow;
+	
 public:	
 	// Sets default values for this actor's properties
 	AACharacter* character;
@@ -30,6 +30,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	UPROPERTY()
+	AActor* ActorToShow;
 	void NextBuilding();
 	
 	void PutBuilding();

@@ -1,4 +1,3 @@
-Build
 Binaries
 DerivedDataCache
 Intermediate
@@ -10,10 +9,12 @@ Saved
 *.opensdf
 *.opendb
 *.sdf
-*.sln
 *.suo
 *.xcodeproj
 *.xcworkspace
 Content/SideScrollerCPP/Maps/Jing_Map_BuiltData.uasset
 Content/SideScrollerCPP/Maps/Yuan_Map_BuiltData.uasset
 
+/Plugins
+*.sln
+Config/DefaultEditorSettings.ini
