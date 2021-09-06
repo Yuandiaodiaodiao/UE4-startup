@@ -22,7 +22,7 @@ AEnemyBase::AEnemyBase()
 	SpawnCollisionHandlingMethod = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 	static auto skele = ConstructorHelpers::FObjectFinderOptional<USkeletalMesh>(
-		TEXT("SkeletalMesh'/Game/Enemy/Enemy2/柱体.柱体'")).Get();
+		TEXT("SkeletalMesh'/Game/Art/Enemy/Enemy2/柱体.柱体'")).Get();
 	Skeletal = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("skele"));
 	Skeletal->SetSkeletalMesh(skele);
 	this->SetRootComponent(Skeletal);
