@@ -62,6 +62,19 @@ AACharacter::AACharacter()
 	// OnTakePointDamage.AddDynamic(this, &IHealthDataInterface::TakePointDamage);
 	OnTakeAnyDamage.AddDynamic(this, &IHealthDataInterface::TakeAnyDamage);
 	// OnTakeRadialDamage.AddDynamic(this, &IHealthDataInterface::TakeRadialDamage);
+
+
+	FPSCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+	check(FPSCameraComponent != nullptr);
+	FPSCameraComponent->SetupAttachment(CastChecked<USceneComponent, UCapsuleComponent>(GetCapsuleComponent()));
+	FPSCameraComponent->bUsePawnControlRotation=true;
+	FPSMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
+	check(FPSMesh != nullptr);
+	// 仅自身可见此网格体
+	FPSMesh->SetOnlyOwnerSee(true);
+	FPSMesh->SetupAttachment(FPSCameraComponent);
+	FPSMesh->bCastDynamicShadow = false;
+	FPSMesh->CastShadow = false;
 }
 
 void AACharacter::ShowInventory()

@@ -11,21 +11,34 @@
 #include "GameFramework/Character.h"
 #include "ACharacter.generated.h"
 
+//玩家角色状态
+UENUM(BlueprintType)
+enum CharacterState
+{
+	Fight,
+	Idle,
+	Work,
+	Die
+};
 
 UCLASS(config=Game)
 class AACharacter : public ACharacter, public IHealthDataInterface, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
-
+public:
 	/** Side view camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* SideViewCameraComponent;
-
 	/** Camera boom positioning the camera beside the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 	TSubclassOf<UUserWidget> InventoryClass;
-
+	//第一人称下的手部Mesh
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly,Category = Mesh)
+	USkeletalMeshComponent* FPSMesh;
+	//第一人称摄像机
+	UPROPERTY(VisibleAnywhere,BlueprintReadOnly)
+	UCameraComponent* FPSCameraComponent;
 protected:
 
 	/** Called for side to side input */
