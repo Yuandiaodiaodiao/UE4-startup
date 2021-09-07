@@ -313,7 +313,6 @@ void AACharacter::TouchStopped(const ETouchIndex::Type FingerIndex, const FVecto
 void AACharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
 	Cast<AMyGameStateBase>(GetWorld()->GetGameState())->TowerArray.Empty();
 	UE_LOG(LogTemp, Warning, TEXT("Clean TowerArray"));
 	genBuildingActor();
