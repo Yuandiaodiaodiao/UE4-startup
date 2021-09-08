@@ -37,10 +37,10 @@ void ABuildingActor::init(AACharacter* characteri)
 	{
 		UE_LOG(LogTemp, Error, TEXT("building Actor init failed "));
 	}
-	character->PlayerInputComponent
-	         ->BindAction("NextBuilding", IE_Pressed, this, &ABuildingActor::NextBuilding);
-	character->PlayerInputComponent
-	         ->BindAction("PutBuilding", IE_Pressed, this, &ABuildingActor::PutBuilding);
+	// character->PlayerInputComponent
+	//          ->BindAction("NextBuilding", IE_Pressed, this, &ABuildingActor::NextBuilding);
+	// character->PlayerInputComponent
+	//          ->BindAction("PutBuilding", IE_Pressed, this, &ABuildingActor::PutBuilding);
 }
 
 float NearestModNumber(float num, float mod)

@@ -103,17 +103,17 @@ void AACharacter::SetupPlayerInputComponent(class UInputComponent* InputComponen
 
 	PlayerInputComponent = InputComponentA;
 	// set up gameplay key bindings
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AACharacter::MoveRight);
-	PlayerInputComponent->BindAction("SaveGame", IE_Pressed, this, &AACharacter::SaveGame);
-	PlayerInputComponent->BindAction("LoadGame", IE_Pressed, this, &AACharacter::LoadGame);
-	PlayerInputComponent->BindAction("TowerEquip", IE_Pressed, this, &AACharacter::TowerEquip);
-	PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AACharacter::ShowInventory);
-	PlayerInputComponent->BindAction("PickUpTower", IE_Pressed, this, &AACharacter::PickUpTower);
-
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &AACharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &AACharacter::TouchStopped);
+	//PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	//PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
+	//PlayerInputComponent->BindAxis("MoveRight", this, &AACharacter::MoveRight);
+	//PlayerInputComponent->BindAction("SaveGame", IE_Pressed, this, &AACharacter::SaveGame);
+	// PlayerInputComponent->BindAction("LoadGame", IE_Pressed, this, &AACharacter::LoadGame);
+	// PlayerInputComponent->BindAction("TowerEquip", IE_Pressed, this, &AACharacter::TowerEquip);
+	// PlayerInputComponent->BindAction("Inventory", IE_Pressed, this, &AACharacter::ShowInventory);
+	// PlayerInputComponent->BindAction("PickUpTower", IE_Pressed, this, &AACharacter::PickUpTower);
+	//
+	// PlayerInputComponent->BindTouch(IE_Pressed, this, &AACharacter::TouchStarted);
+	// PlayerInputComponent->BindTouch(IE_Released, this, &AACharacter::TouchStopped);
 }
 
 void AACharacter::SetEquippedGun_Implementation(AGunBase* Gun)
