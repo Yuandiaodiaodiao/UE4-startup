@@ -36,7 +36,7 @@ void ATowerAIController::Tick(float DeltaSeconds)
 {
 	if(this->GetTower()->GetWeapon())
 	{
-		this->GetTower()->GetWeapon()->shoot2();
+		this->GetTower()->GetWeapon()->shoot();
 	}
 	if (ActorsBeSee.Num() > 0)
 	{

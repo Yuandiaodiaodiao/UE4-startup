@@ -32,6 +32,14 @@ AGunBase::AGunBase()
 	Rail4->SetupAttachment(Model);
 }
 
+bool AGunBase::AllowShoot()
+{
+	if(RoundRemain>0)
+		return true;
+	else
+		return false;
+}
+
 void AGunBase::shoot()
 {
 	if(GetWorld()->GetTimeSeconds()>=AllowShootTime)
@@ -65,9 +73,7 @@ void AGunBase::shoot()
 
 
 
-void AGunBase::shoot2_Implementation()
-{
-}
+
 
 FShootDirectionStruct AGunBase::GetShootDirection_Implementation()
 {

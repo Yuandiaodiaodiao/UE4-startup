@@ -105,11 +105,16 @@ public:
     TObjectPtr<USceneComponent> RailSight;
     //TODO 各类BUFF的实现和结构，这里需要有一个针对改装后武器各种加成的集合，只在改装武器时更新，减少伤害计算时运算量。
     ////////////////////////////////武器事件//////////////////////////////////////////////////
-    //射击的顶层实现
+    //查询当前是否允许射击。
+    UFUNCTION(BlueprintCallable, Category = "BlueprintFunc")
+    bool AllowShoot();
+    //射击
     UFUNCTION(BlueprintCallable, Category = "BlueprintFunc")
     void shoot();
-    UFUNCTION(BlueprintNativeEvent,BlueprintCallable, Category = "BlueprintFunc")
-    void shoot2();
+    /**
+    * @brief 换弹
+    * @param Ammo 角色身上携带的剩余弹药
+    */
     UFUNCTION(BlueprintImplementableEvent,BlueprintCallable,  Category = "BlueprintFunc")
     void Reload(int32 Ammo);
     DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FReceiveDelegateEvent,bool,bSuccess,int32,Ammo);
